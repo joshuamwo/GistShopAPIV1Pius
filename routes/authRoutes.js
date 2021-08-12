@@ -28,24 +28,53 @@ authRouter.post('/register', (req, res, next) => {
     .catch(err => next(err))
 });
 
-authRouter.post('/login', async (req, res, next) => {
-  passport.authenticate('login', async (err, user, info) => {
-    try {
-      if (err || !user) {
-        const error = new Error('Houston we have a problem');
+authRouter.post('/login', (req, res, next) => {
+/* custom callback . gives us access to req res and next coz of js closure */
+  passport.authenticate('login', (err, user, info) => {
+      if (err) {
+        const error = new Error(info.message);
         return next(error);
       }
-      req.login(user, { session: false }, (error) => {
+      else if (!user) {
+        const error = new Error(info.message);
+        return next(error);
+      }
+
+      req.logIn(user, { session: false }, (error) => {
         if (error) return next(error);
         // seed();
-        const body = { _id: user._id, email: user.email };
-        const token = jwt.sign({ user: body }, process.env.secret_key);
-        res.json({ token });
+        else if (user && !error) {
+          const body = { _id: user._id, email: user.email };
+          const token = jwt.sign({ user: body }, process.env.secret_key);
+          res.json({ token });
+        }
       })
-    }
-    catch (error) {
+  })(req, res, next);
+});
+
+authRouter.post('/admin/login',  (req, res, next) => {
+  /*custom callback */
+  passport.authenticate('manager', (err, user, info) => {
+
+    if (err) {
+      const error = new Error(info.message);
       return next(error);
     }
+    else if (!user) {
+      const error = new Error(info.message);
+      return next(error);
+    }
+    
+      req.logIn(user, { session: false }, (error) => {
+        if (error) return next(error);
+        // seed();
+        else if (user && !error) {
+          const body = { _id: user._id, email: user.email };
+          const token = jwt.sign({ user: body }, process.env.secret_key);
+          res.json({ token });
+        }
+      })
+ 
   })(req, res, next);
 });
 
