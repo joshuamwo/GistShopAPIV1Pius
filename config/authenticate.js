@@ -13,21 +13,33 @@ passport.use(
 			usernameField: "email",
 			passwordField: "password",
 		},
-		async (email, password, done) => {
-			try {
-				const worker = await workerModel.findOne({ email });
-				if (!worker) {
-					return done(null, false, { message: "Incorrect email address" });
-				}
+		(email, password, done) => {
+			workerModel
+				.findOne({ email: email })
+				.then(
+					(worker) => {
+						if (!worker)
+							return done(null, false, { message: "incorrect email address" });
 
-				const validate = await worker.isValidPassword(password);
-				if (!validate) {
-					return done(null, false, { message: "Wrong password" });
-				}
-				return done(null, worker, { message: "Successful" });
-			} catch (err) {
-				return done(err);
-			}
+						/*.................nested promise to verify  password....................... */
+						worker
+							.isValidPassword(password)
+							.then(
+								(validate) => {
+									if (validate) done(null, validate, { message: "Sucessful" });
+									else if (!validate)
+										done(null, false, { message: "Invalid password" });
+								},
+								(err) => done(null, false, { mesage: "incorrect password" })
+							)
+							.catch((err) =>
+								done(null, false, { message: "Incorrect password" })
+							);
+						/*......................end of nested promise..............................*/
+					},
+					(err) => done(null, false, { message: err.message })
+				)
+				.catch((err) => done(null, false, { message: err.message }));
 		}
 	)
 );
@@ -44,19 +56,23 @@ passport.use(
 				.findOne({ email: email, title: "manager" })
 				.then(
 					(manager) => {
-						/*nested promise to check if password is correct if email and title match */
 						if (!manager)
 							return done(null, false, { message: "Incorrect email address" });
+						/*nested promise to check if password is correct if email and title match */
 						manager
 							.isValidPassword(password)
 							.then(
 								(validate) => {
-									done(null, validate, { message: "Successful" });
+									if (validate) done(null, validate, { message: "Sucessful" });
+									else if (!validate)
+										done(null, false, { message: "Invalid password" });
 								},
-								(err) => done(null, false, { message: err.message })
+								(err) => done(null, false, { message: "Incorrect password" })
 							)
-							.catch((err) => done(null, false, { message: err.message }));
-						/* end of nested promise */
+							.catch((err) =>
+								done(null, false, { message: "Incorrect password" })
+							);
+						/* ...............................end of nested promise..................... */
 					},
 					(err) => done(null, false, { message: err.message })
 				)

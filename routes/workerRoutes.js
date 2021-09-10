@@ -1,11 +1,8 @@
 const express = require("express");
-var cors = require("cors");
 var workerRouter = express.Router();
 
 var workerModel = require("../models/workerSchema");
 
-const app = express();
-app.use(cors({ credentials: true, origin: true }));
 
 workerRouter
 	.route(`/`)

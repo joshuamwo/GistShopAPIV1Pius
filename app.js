@@ -4,6 +4,7 @@ var path = require('path');
 var logger = require('morgan');
 var mongoose = require('mongoose');
 var passport = require('passport');
+var cors = require('cors');
 require('./config/authenticate');
 
 var animalRouter = require('./routes/animalRoutes');
@@ -20,6 +21,7 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+app.use(cors({ credentials: true, origin: true }))
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

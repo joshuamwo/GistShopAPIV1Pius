@@ -1,5 +1,4 @@
 const express = require("express");
-var cors = require("cors");
 var animalRouter = express.Router();
 
 var beefModel = require("../models/beefSchema");
@@ -16,8 +15,7 @@ const getModel = (department) => {
 	else return null;
 };
 
-const app = express();
-app.use(cors({ credentials: true, origin: true }));
+
 animalRouter
 	.route(`/:department`)
 	.get((req, res, next) => {

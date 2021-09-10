@@ -1,11 +1,7 @@
 const express = require("express");
-var cors = require("cors");
 var taskRouter = express.Router();
-
 var task = require("../models/taskSchema");
 
-const app = express();
-app.use(cors({ credentials: true, origin: true }));
 taskRouter
   .route(`/:department`)
   .get((req, res, next) => {
