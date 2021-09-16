@@ -89,7 +89,7 @@ passport.use(
 		},
 		async (token, done) => {
 			try {
-				return done(null, token.user, { message: "Success" });
+				return done(null, token, { message: "Success" });
 			} catch (error) {
 				done(error);
 			}

@@ -71,7 +71,7 @@ const connect = () => {
   mongoose.connect(process.env.MONGO_URI, options)
   .then(res => {
     console.log('connection to server alive on port: ' +port);
-  },err => next(err))
+  },err => console.log(err))
   .catch(err => console.log(err))
 
 }
