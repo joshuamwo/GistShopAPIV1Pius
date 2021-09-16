@@ -28,9 +28,17 @@ inventoryRouter
           res.setHeader("Content-Type", "application/json");
           res.json(store);
         },
-        (err) => next(err)
+        (err) => {
+          res.statusCode = 401;
+          res.setHeader("Content-Type", "application/json");
+          res.json(err.errors);
+        }
       )
-      .catch((err) => next(err));
+      .catch((err) => {
+        res.statusCode = 401;
+        res.setHeader("Content-Type", "application/json");
+        res.json(err.errors);
+      });
   });
 
 inventoryRouter
