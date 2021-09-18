@@ -12,7 +12,7 @@ const logSchema = new Schema(
       type: String,
       trim: true,
       lowercase: true,
-      required: "Email address is required",
+      required: [true, "Email address is required"],
       validate: [validateEmail, "Please fill a valid email address"],
       match: [
         /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
@@ -21,11 +21,11 @@ const logSchema = new Schema(
     },
     product: {
       type: String,
-      required: true,
+      required: [true, 'The product field is required'],
     },
     amount: {
       type: Number,
-      required: true,
+      required: [true, 'The amount field is required'],
     },
   },
   {

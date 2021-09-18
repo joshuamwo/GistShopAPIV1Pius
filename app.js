@@ -12,6 +12,7 @@ var authRouter = require('./routes/authRoutes');
 var inventoryRouter = require('./routes/inventoryRoutes');
 var workerRouter = require('./routes/workerRoutes');
 var taskRouter = require('./routes/taskRoutes');
+var logRouter = require('./routes/logRoutes');
 
 require('dotenv').config({ path: `${__dirname}/config/.env` });
 
@@ -34,6 +35,8 @@ app.use('/animals',passport.authenticate('jwt', {session: false}), animalRouter)
 app.use('/inventory', passport.authenticate('jwt', {session: false}),inventoryRouter);
 app.use('/workers', passport.authenticate('jwt', {session: false}),workerRouter);
 app.use('/tasks', passport.authenticate('jwt', {session: false}),taskRouter);
+app.use('/logs', passport.authenticate('jwt', {session: false}),logRouter);
+
 
 
 // catch 404 and forward to error handler
