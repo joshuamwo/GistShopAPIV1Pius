@@ -8,10 +8,10 @@ const taskSchema = new Schema(
 			required: true,
 		},
 		instruction: {
-			type: [String],
+			type: String,
 			required: true,
 			unique: true,
-			validate: [(value) => value.length > 0, "Intruction required"],
+			validate: [(value) => value.length > 0, "Instruction required"],
 		},
 	},
 	{

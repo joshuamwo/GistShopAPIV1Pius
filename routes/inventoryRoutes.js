@@ -9,6 +9,7 @@ inventoryRouter
   .get((req, res, next) => {
     inventory
       .find()
+      .sort("-_id")
       .then(
         (store) => {
           res.statusCode = 200;
@@ -29,9 +30,15 @@ inventoryRouter
           res.json(store);
         },
         (err) => {
-          res.statusCode = 401;
-          res.setHeader("Content-Type", "application/json");
-          res.json(err.errors);
+          if (err.code === 11000) {
+            res.statusCode = 400;
+            res.setHeader("Content-Type", "application/json");
+            res.json(`${req.body.name} already exists`);
+          } else {
+            res.statusCode = 422;
+            res.setHeader("Content-Type", "application/json");
+            res.json(err.errors);
+          }
         }
       )
       .catch((err) => {

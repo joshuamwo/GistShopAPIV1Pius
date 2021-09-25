@@ -6,6 +6,7 @@ const logs = require("../models/logSchema");
 logRouter.route(`/`).get((req, res, next) => {
   logs
     .find()
+    .sort("-_id")
     .then(
       (logs) => {
         res.statusCode = 200;

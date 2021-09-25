@@ -42,15 +42,13 @@ authRouter.post("/login", (req, res, next) => {
     }
 
     req.login(user, { session: false }, (error) => {
+      // seed();
       if (error) {
         return res
           .status(422)
           .setHeader("Content-Type", "application/json")
           .json(error.message);
-      }
-
-      // seed();
-      else if (user && !error) {
+      } else if (user && !error) {
         const email = req.body.email;
         const token = jwt.sign({ email }, process.env.secret_key);
         res.json({ token, email });

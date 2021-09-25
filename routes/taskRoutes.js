@@ -6,7 +6,8 @@ taskRouter
   .route(`/:department`)
   .get((req, res, next) => {
     task
-      .find({department: req.params.department})
+      .find({ department: req.params.department })
+      .sort("-_id")
       .then(
         (task) => {
           res.statusCode = 200;
@@ -26,9 +27,23 @@ taskRouter
           res.setHeader("Content-Type", "application/json");
           res.json(task);
         },
-        (err) => next(err)
+        (err) => {
+          if (err.code === 11000) {
+            res.statusCode = 400;
+            res.setHeader("Content-Type", "application/json");
+            res.json(`${req.body.name} already exists`);
+          } else {
+            res.statusCode = 422;
+            res.setHeader("Content-Type", "application/json");
+            res.json(err.errors);
+          }
+        }
       )
-      .catch((err) => next(err));
+      .catch((err) => {
+        res.statusCode = 401;
+        res.setHeader("Content-Type", "application/json");
+        res.json(err.errors);
+      });
   });
 
 taskRouter

@@ -25,14 +25,16 @@ const seedWorkers = () => {
 
 const seedBeef = () => {
   var i;
-  for (i = 0; i < 8; i++) {
+  for (i = 0; i < 4; i++) {
     var newBeef = new beefModel({
       name: faker.animal.cow(),
       age_in_weeks: 45,
-      weekly_weight: [{ date: Date.now(), weight: 1200 }, { date: Date.now(), weight: 1198 }],
-      breed: 'short horn',
-      department: 'beef',
-      history: ['hardware poisoning', 'aggressive to stragers']
+      weekly_weight: [
+        { date: Date.now(), weight: 950 },
+        { date: Date.now(), weight: 926 },
+      ],
+      breed: "hereford",
+      history: "White Muscle Disease",
     });
     beefModel.create(newBeef)
   }
@@ -40,15 +42,14 @@ const seedBeef = () => {
 
 const seedDairy = () => {
   var i;
-  for (i = 0; i < 25; i++) {
+  for (i = 0; i < 5; i++) {
     var newDairy = new dairyModel({
       name: faker.animal.cow(),
-      age_in_weeks: 200,
-      weekly_weight: [{ date: Date.now(), weight: 500 }, { date: Date.now(), weight: 479 }],
-      milk_daily: [{ date: Date.now(), litres: 40 }, { date: Date.now(), litres: 38 }],
-      breed: 'brown swiss',
-      department: 'dairies',
-      history: ['foot rot', 'two miscarriages']
+      age_in_weeks: 114,
+      weekly_weight: [{ date: Date.now(), weight: 741 }, { date: Date.now(), weight: 745 }],
+      milk_daily: [{ date: Date.now(), litres: 36 }, { date: Date.now(), litres: 38 }],
+      breed: 'Guernsey',
+      history: 'east coast fever'
     });
     dairyModel.create(newDairy)
   }
@@ -56,15 +57,17 @@ const seedDairy = () => {
 
 const seedPigs = () => {
   var i;
-  for (i = 0; i < 22; i++) {
+  for (i = 0; i < 5; i++) {
     var newPig = new pigModel({
       name: faker.animal.cat(),
-      age_in_weeks: 22,
-      weekly_weight: [{ date: Date.now(), weight: 320 }, { date: Date.now(), weight: 315 }],
-      breed: 'chester white',
-      sex: 'female',
-      department: 'pigs',
-      history: ['Gastric ulcers']
+      age_in_weeks: 14,
+      weekly_weight: [
+        { date: Date.now(), weight: 45 },
+        { date: Date.now(), weight: 44.25 },
+      ],
+      breed: "Large  white",
+      sex: "female",
+      history: " Coccidiosis",
     });
     pigModel.create(newPig)
   }
@@ -72,15 +75,20 @@ const seedPigs = () => {
 
 const seedLayers = () => {
   var i;
-  for (i = 0; i < 45; i++) {
+  for (i = 0; i < 15; i++) {
     var newLayer = new layerModel({
       name: faker.name.firstName(),
-      age_in_weeks: 30,
-      monthly_weight: [{ date: Date.now(), weight: 6 }, { date: Date.now(), weight: 5 }],
-      eggs_weekly: [{ date: Date.now(), number: 6 }, { date: Date.now(), number: 7 }],
-      breed: 'rhode island red',
-      department: 'layers',
-      history: ['Cecal Worms', 'Poultry Mites']
+      age_in_weeks: 20,
+      weekly_weight: [
+        { date: Date.now(), weight: 1.24 },
+        { date: Date.now(), weight: 1.15 },
+      ],
+      eggs_weekly: [
+        { date: Date.now(), number: 3 },
+        { date: Date.now(), number: 5 },
+      ],
+      breed: " Plymouth Rock",
+      history: "Botulism",
     });
     layerModel.create(newLayer)
   }
@@ -93,7 +101,6 @@ const seedInventory = () => {
     amount: 1500,
     unit_weight: 90,
     vendor: 'triple-A growers',
-    department: 'beef',
   });
   inventoryModel.create(newInventory)
 }
@@ -113,12 +120,12 @@ const seedTask = () => {
 }
 
 const seeder = () => {
-  seedWorkers();
+  // seedWorkers();
   seedBeef();
   seedDairy();
   seedPigs();
   seedLayers();
-  seedInventory();
-  seedTask();
+  // seedInventory();
+  // seedTask();
 }
 module.exports = seeder;

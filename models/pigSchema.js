@@ -1,35 +1,44 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
 
-const pigSchema = new Schema({
-  name: {
-    type: String, required: true, unique: true
+const pigSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Name is required"],
+      unique: true,
+    },
+    age_in_weeks: {
+      type: Number,
+      required: [true, "Age in weeks is required"],
+    },
+    weekly_weight: {
+      type: [
+        {
+          date: {
+            type: Date,
+            required: [true, "Date field is required"],
+          },
+          weight: {
+            type: Number,
+            required: [true, "Weight field is required"],
+          },
+        },
+      ],
+    },
+    breed: {
+      type: String,
+      required: [true, " Breed is required"],
+    },
+    history: String,
   },
-  age_in_weeks: {
-    type: Number, required: true
-  },
-  weekly_weight: {
-    type: [{
-      date: Date, weight: Number
-    }], required: true
-  },
-  sex: {
-    type: String, required: true
-  },
-  breed: {
-    type: String, required: true
-  },
-  department: {
-    type: String, required: true
-  },
-  history: [String],
-}, {
-  timestamps: true,
-  autoCreate: true,
-  autoIndex: true
-});
+  {
+    timestamps: true,
+    autoCreate: true,
+    autoIndex: true,
+  }
+);
 
-
-const pigs = model('pig', pigSchema);
+const pigs = model("pig", pigSchema);
 
 module.exports = pigs;
