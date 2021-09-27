@@ -33,7 +33,7 @@ workerRouter
           if (err.code === 11000) {
             res.statusCode = 400;
             res.setHeader("Content-Type", "application/json");
-            res.json(`${req.body.name} already exists`);
+            res.json(`${req.body.firstName} already exists`);
           } else {
             res.statusCode = 422;
             res.setHeader("Content-Type", "application/json");
@@ -59,9 +59,17 @@ workerRouter
           res.setHeader("Content-Type", "application/json");
           res.json(worker);
         },
-        (err) => next(err)
+        (err) => {
+          res.statusCode = 422;
+          res.setHeader("Content-Type", "application/json");
+          res.json(err.errors);
+        }
       )
-      .catch((err) => next(err));
+      .catch((err) => {
+        res.statusCode = 422;
+        res.setHeader("Content-Type", "application/json");
+        res.json(err.errors);
+      });
   })
   .put((req, res, next) => {
     workerModel

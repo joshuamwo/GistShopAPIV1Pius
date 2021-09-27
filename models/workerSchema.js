@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 
 const value = {
   type: String,
-  required: true,
+  required: [true, "This field is required"],
   trim: true,
   unique: false,
 }
@@ -19,15 +19,12 @@ const workerSchema = new Schema({
   email: {
     type: String,
     unique: true,
-    required: true,
+    required: [true, "The emaill address is required"],
     index: true,
     dropDups: true,
   },
   password: value,
-  salary: {
-    type: Currency,
-    required: true,
-  },
+
   date_employed: { type: Date, default: Date.now() },
 },
   {
