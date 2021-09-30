@@ -2,11 +2,57 @@ const express = require("express");
 var taskRouter = express.Router();
 var task = require("../models/taskSchema");
 
+/*....................Add task............................*/
+taskRouter.route(`/`).post((req, res, next) => {
+  task
+    .create(req.body)
+    .then(
+      (task) => {
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/json");
+        res.json(task);
+      },
+      (err) => {
+        if (err.code === 11000) {
+          res.statusCode = 400;
+          res.setHeader("Content-Type", "application/json");
+          res.json(`task already exists`);
+        } else {
+          res.statusCode = 422;
+          res.setHeader("Content-Type", "application/json");
+          res.json(err.errors);
+        }
+      }
+    )
+    .catch((err) => {
+      res.statusCode = 401;
+      res.setHeader("Content-Type", "application/json");
+      res.json(err.errors);
+    });
+});
+
+/*...........................get tasks by departmment.........................*/
+taskRouter.route(`/departments/:department`).get((req, res, next) => {
+  task
+    .find({ department: req.params.department })
+    .sort("-_id")
+    .then(
+      (task) => {
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/json");
+        res.json(task);
+      },
+      (err) => next(err)
+    )
+    .catch((err) => next(err));
+});
+
+/*...................get update and delete Task by id...............................*/
 taskRouter
-  .route(`/:department`)
+  .route("/:taskId")
   .get((req, res, next) => {
     task
-      .find({ department: req.params.department })
+      .findById(req.params.taskId)
       .sort("-_id")
       .then(
         (task) => {
@@ -18,36 +64,6 @@ taskRouter
       )
       .catch((err) => next(err));
   })
-  .post((req, res, next) => {
-    task
-      .create(req.body)
-      .then(
-        (task) => {
-          res.statusCode = 200;
-          res.setHeader("Content-Type", "application/json");
-          res.json(task);
-        },
-        (err) => {
-          if (err.code === 11000) {
-            res.statusCode = 400;
-            res.setHeader("Content-Type", "application/json");
-            res.json(`${req.body.name} already exists`);
-          } else {
-            res.statusCode = 422;
-            res.setHeader("Content-Type", "application/json");
-            res.json(err.errors);
-          }
-        }
-      )
-      .catch((err) => {
-        res.statusCode = 401;
-        res.setHeader("Content-Type", "application/json");
-        res.json(err.errors);
-      });
-  });
-
-taskRouter
-  .route("/:taskId")
   .put((req, res, next) => {
     let newTask = req.body;
     task
@@ -56,7 +72,7 @@ taskRouter
         {
           $set: newTask,
         },
-        { new: true }
+        { new: true, runValidators: true }
       )
       .then(
         (object) => {
@@ -64,9 +80,17 @@ taskRouter
           res.setHeader("Content-Type", "application/json");
           res.json(object);
         },
-        (err) => next(err)
+        (err) => {
+          res.statusCode = 400;
+          res.setHeader("Content-Type", "application/json");
+          res.json(err.errors);
+        }
       )
-      .catch((err) => next(err));
+      .catch((err) => {
+        res.statusCode = 400;
+        res.setHeader("Content-Type", "application/json");
+        res.json(err.errors);
+      });
   })
 
   .delete((req, res, next) => {

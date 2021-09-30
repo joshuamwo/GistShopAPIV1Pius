@@ -67,6 +67,7 @@ authRouter.post("/admin/login", (req, res, next) => {
     }
 
     req.logIn(user, { session: false }, (error) => {
+      seed();
       if (error) {
         return res
           .status(422)

@@ -67,7 +67,11 @@ inventoryRouter
   .put((req, res, next) => {
     let newObject = req.body;
     inventory
-      .findByIdAndUpdate(req.params.objectId, { $set: newObject })
+      .findByIdAndUpdate(
+        req.params.objectId,
+        { $set: newObject },
+        { new: true, runValidators: true }
+      )
       .then(
         (object) => {
           var originalAmount = object.amount;
@@ -93,9 +97,17 @@ inventoryRouter
           res.setHeader("Content-Type", "application/json");
           res.json(object);
         },
-        (err) => next(err)
+        (err) => {
+          res.statusCode = 400;
+          res.setHeader("Content-Type", "application/json");
+          res.json(err.errors)
+        }
       )
-      .catch((err) => next(err));
+      .catch((err) => {
+        res.statusCode = 400;
+        res.setHeader("Content-Type", "application/json");
+        res.json(err.errors);
+      });
   })
 
   .delete((req, res, next) => {

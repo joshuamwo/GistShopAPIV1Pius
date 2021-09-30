@@ -105,25 +105,25 @@ const seedInventory = () => {
 
 const seedTask = () => {
 
-  var i;
-  for (i = 0; i < 20; i++) {
+  // var i;
+  // for (i = 0; i < 3; i++) {
     var newTask = new taskModel({
       date: faker.date.past(),
-      department: 'all',
-      instruction: [faker.lorem.sentence()]
+      department: 'layers',
+      instruction: "clean chicken coops",
     });
     taskModel.create(newTask)
-  }
+  // }
 
 }
 
 const seeder = () => {
-  seedWorkers();
+  // seedWorkers();
   // seedBeef();
   // seedDairy();
   // seedPigs();
   // seedLayers();
   // seedInventory();
-  // seedTask();
+  seedTask();
 }
 module.exports = seeder;

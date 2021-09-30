@@ -63,7 +63,6 @@ animalRouter
       .catch((err) => {
         res.statusCode = 422;
         res.setHeader("Content-Type", "application/json");
-        // if (err.code===11000) res.json("This item already exists");
         res.json(err.errors);
       });
   });
@@ -92,7 +91,7 @@ animalRouter
         {
           $set: updatedAnimal,
         },
-        { new: true }
+        { new: true, runValidators: true }
       )
       .then(
         (newAnimal) => {
@@ -100,9 +99,17 @@ animalRouter
           res.setHeader("Content-Type", "application/json");
           res.json(newAnimal);
         },
-        (err) => next(err)
+        (err) => {
+          res.statusCode = 400;
+          res.setHeader("Content-Type", "application/json");
+          res.json(err.errors);
+        }
       )
-      .catch((err) => next(err));
+      .catch((err) => {
+        res.statusCode = 400;
+        res.setHeader("Content-Type", "application/json");
+        res.json(err.errors);
+      });
   })
 
   .delete((req, res, next) => {

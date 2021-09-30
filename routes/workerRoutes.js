@@ -78,7 +78,7 @@ workerRouter
         {
           $set: req.body,
         },
-        { new: true }
+        { new: true, runValidators: true }
       )
       .then(
         (worker) => {
@@ -86,9 +86,17 @@ workerRouter
           res.setHeader("Content-Type", "application/json");
           res.json(worker);
         },
-        (err) => next(err)
+        (err) => {
+          res.statusCode = 400;
+          res.setHeader("Content-Type", "application/json");
+          res.json(err.errors)
+        }
       )
-      .catch((err) => next(err));
+      .catch((err) =>  {
+        res.statusCode = 400;
+        res.setHeader("Content-Type", "application/json");
+        res.json(err.errors);
+      });
   })
   .delete((req, res, next) => {
     workerModel.findByIdAndDelete(req.params.workerId).then((worker) => {
