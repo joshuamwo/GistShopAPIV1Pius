@@ -12,6 +12,11 @@ const pigSchema = new Schema(
       type: Number,
       required: [true, "Age in weeks is required"],
     },
+    breed: {
+      type: String,
+      required: [true, " Breed is required"],
+    },
+    history: String,
     weekly_weight: {
       type: [
         {
@@ -26,11 +31,6 @@ const pigSchema = new Schema(
         },
       ],
     },
-    breed: {
-      type: String,
-      required: [true, " Breed is required"],
-    },
-    history: String,
   },
   {
     timestamps: true,

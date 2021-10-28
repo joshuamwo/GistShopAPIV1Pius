@@ -45,10 +45,20 @@ const seedDairy = () => {
     var newDairy = new dairyModel({
       name: faker.animal.cow(),
       age_in_weeks: 100,
-      weekly_weight: [{ date: Date.now(), weight: 804 }, { date: Date.now(), weight: 800 }],
-      milk_daily: [{ date: Date.now(), litres: 33.14}, { date: Date.now(), litres: 31.15 }],
-      breed: 'Brown swiss',
-      history: 'ticks'
+      weekly_weight: [
+        { date: Date.now(), weight: 770 },
+        { date: Date.now(), weight: 762 },
+        { date: Date.now(), weight: 780 },
+        { date: Date.now(), weight: 785 },
+        { date: Date.now(), weight: 720 },
+        { date: Date.now(), weight: 755 },
+      ],
+      milk_daily: [
+        { date: Date.now(), litres: 33.14 },
+        { date: Date.now(), litres: 31.15 },
+      ],
+      breed: "Brown swiss",
+      history: "ticks",
     });
     dairyModel.create(newDairy)
   }
@@ -120,10 +130,10 @@ const seedTask = () => {
 const seeder = () => {
   // seedWorkers();
   // seedBeef();
-  // seedDairy();
+  seedDairy();
   // seedPigs();
   // seedLayers();
   // seedInventory();
-  seedTask();
+  // seedTask();
 }
 module.exports = seeder;

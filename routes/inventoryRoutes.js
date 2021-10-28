@@ -70,7 +70,7 @@ inventoryRouter
       .findByIdAndUpdate(
         req.params.objectId,
         { $set: newObject },
-        { new: true, runValidators: true }
+        { runValidators: true }
       )
       .then(
         (object) => {

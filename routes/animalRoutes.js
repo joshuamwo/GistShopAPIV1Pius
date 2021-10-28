@@ -82,14 +82,20 @@ animalRouter
       )
       .catch((err) => next(err));
   })
-
   .put((req, res, next) => {
     var updatedAnimal = req.body;
+    console.log(updatedAnimal);
     getModel(req.params.department)
       .findByIdAndUpdate(
         req.params.animalId,
         {
-          $set: updatedAnimal,
+          // $set:  updatedAnimal,
+          // $set: { breed: updatedAnimal.breed },
+          // $set: { age_in_weeks: updatedAnimal.age_in_weeks },
+          $push: { history: updatedAnimal.history },
+          $push: { weekly_weight: updatedAnimal.weekly_weight },
+          $push: { eggs_weekly: updatedAnimal.eggs_weekly },
+          $push: { milk_daily: updatedAnimal.milk_daily },
         },
         { new: true, runValidators: true }
       )

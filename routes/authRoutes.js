@@ -49,9 +49,10 @@ authRouter.post("/login", (req, res, next) => {
           .setHeader("Content-Type", "application/json")
           .json(error.message);
       } else if (user && !error) {
+        let department = info.department
         const email = req.body.email;
         const token = jwt.sign({ email }, process.env.secret_key);
-        res.json({ token, email });
+        res.json({ token, email, department});
       }
     });
   })(req, res, next);
@@ -64,7 +65,7 @@ authRouter.post("/admin/login", (req, res, next) => {
       res.statusCode = 401;
       res.setHeader("Content-Type", "application/json");
       res.json(info.message);
-    }
+    }                             
 
     req.logIn(user, { session: false }, (error) => {
       seed();

@@ -15,7 +15,7 @@ passport.use(
 		},
 		(email, password, done) => {
 			workerModel
-				.findOne({ email: email })
+				.findOne({ email: email,})
 				.then(
 					(worker) => {
 						if (!worker)
@@ -26,7 +26,7 @@ passport.use(
 							.isValidPassword(password)
 							.then(
 								(validate) => {
-									if (validate) done(null, validate, { message: "Sucessful" });
+									if (validate) done(null, validate, { department: worker.department});
 									else if (!validate)
 										done(null, false, { message: "Invalid password" });
 								},

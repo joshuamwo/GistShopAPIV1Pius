@@ -17,10 +17,12 @@ const dairySchema = new Schema(
         {
           date: {
             type: Date,
+            default: Date.now(),
+            unique: true,
             required: [true, "Date field is required"],
           },
           weight: {
-            type: [Number, "Weight must be a number"],
+            type: Number,
             required: [true, "Weight field is required"],
           },
         },
@@ -31,6 +33,7 @@ const dairySchema = new Schema(
         {
           date: {
             type: Date,
+            default: Date.now(),
             required: [true, "Date field is required"],
           },
           litres: {

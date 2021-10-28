@@ -26,7 +26,7 @@ const workerSchema = new Schema(
     email: {
       type: String,
       unique: true,
-      required: [true, "The emaill address is required"],
+      required: [true, "The email address is required"],
       index: true,
       dropDups: true,
       validate: [validateEmail, "Please fill a valid email address"],
