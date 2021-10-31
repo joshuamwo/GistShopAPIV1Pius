@@ -17,20 +17,18 @@ const pigSchema = new Schema(
       required: [true, " Breed is required"],
     },
     history: String,
-    weekly_weight: {
-      type: [
-        {
-          date: {
-            type: Date,
-            required: [true, "Date field is required"],
-          },
-          weight: {
-            type: Number,
-            required: [true, "Weight field is required"],
-          },
+    weekly_weight: [
+      {
+        date: {
+          type: Date,
+          default: Date.now()
         },
-      ],
-    },
+        weight: {
+          type: Number,
+          required: [true, "Weight field is required"],
+        },
+      },
+    ],
   },
   {
     timestamps: true,

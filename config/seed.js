@@ -129,8 +129,8 @@ const seedTask = () => {
 
 const seeder = () => {
   // seedWorkers();
-  // seedBeef();
-  seedDairy();
+  seedBeef();
+  // seedDairy();
   // seedPigs();
   // seedLayers();
   // seedInventory();

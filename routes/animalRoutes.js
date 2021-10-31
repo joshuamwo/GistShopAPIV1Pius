@@ -84,21 +84,20 @@ animalRouter
   })
   .put((req, res, next) => {
     var updatedAnimal = req.body;
-    console.log(updatedAnimal);
+    const update =
+      req.body?.op === "milk"
+        ? { $push: { milk_daily: updatedAnimal.milk_daily } }
+        : req.body.op === "eggs"
+        ? { $push: { eggs_weekly: updatedAnimal.eggs_weekly } }
+        : req.body.op === "weight"
+        ? { $push: { weekly_weight: updatedAnimal.weekly_weight } }
+        : { $set: updatedAnimal };
+
     getModel(req.params.department)
-      .findByIdAndUpdate(
-        req.params.animalId,
-        {
-          // $set:  updatedAnimal,
-          // $set: { breed: updatedAnimal.breed },
-          // $set: { age_in_weeks: updatedAnimal.age_in_weeks },
-          $push: { history: updatedAnimal.history },
-          $push: { weekly_weight: updatedAnimal.weekly_weight },
-          $push: { eggs_weekly: updatedAnimal.eggs_weekly },
-          $push: { milk_daily: updatedAnimal.milk_daily },
-        },
-        { new: true, runValidators: true }
-      )
+      .findByIdAndUpdate(req.params.animalId, update, {
+        new: true,
+        runValidators: true,
+      })
       .then(
         (newAnimal) => {
           res.statusCode = 200;
@@ -108,7 +107,7 @@ animalRouter
         (err) => {
           res.statusCode = 400;
           res.setHeader("Content-Type", "application/json");
-          res.json(err.errors);
+          res.json(err);
         }
       )
       .catch((err) => {

@@ -12,38 +12,38 @@ const layerSchema = new Schema(
       type: Number,
       required: [true, "Age in weeks is required"],
     },
-    weekly_weight: {
-      type: [
-        {
-          date: {
-            type: Date,
-            required: [true, "Date field is required"],
-          },
-          weight: {
-            type: Number,
-            required: [true, "Weight field is required"],
-          },
+    weekly_weight: [
+      {
+        date: {
+          type: Date,
+          default: Date.now(),
         },
-      ],
-    },
+        weight: {
+          type: Number,
+          min: [1.5, "Minimum weight for a layer is 1.5 kilos"],
+          max: [5, "Maximum weight for a layer is 5 kilos"],
+          required: [true, "Weight field is required"],
+        },
+      },
+    ],
     breed: {
       type: String,
       required: [true, " Breed is required"],
     },
-    eggs_weekly: {
-      type: [
-        {
-          date: {
-            type: Date,
-            required: [true, "Date field is required"],
-          },
-          number: {
-            type: Number,
-            required: [true, "Number field is required"],
-          },
+    eggs_weekly: [
+      {
+        date: {
+          type: Date,
+          default: Date.now(),
         },
-      ],
-    },
+        number: {
+          type: Number,
+          min: [0, "Minimum egg count is 0 kilos"],
+          max: [10, "Maximum egg count is 10"],
+          required: [true, "Eggs field is required"],
+        },
+      },
+    ],
     history: String,
   },
   {

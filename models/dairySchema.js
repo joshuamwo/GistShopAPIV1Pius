@@ -12,39 +12,36 @@ const dairySchema = new Schema(
       type: Number,
       required: [true, "Age in weeks is required"],
     },
-    weekly_weight: {
-      type: [
-        {
-          date: {
-            type: Date,
-            default: Date.now(),
-            unique: true,
-            required: [true, "Date field is required"],
-          },
-          weight: {
-            type: Number,
-            required: [true, "Weight field is required"],
-          },
+    weekly_weight: [
+      {
+        date: {
+          type: Date,
+          default: Date.now(),
         },
-      ],
-    },
-    milk_daily: {
-      type: [
-        {
-          date: {
-            type: Date,
-            default: Date.now(),
-            required: [true, "Date field is required"],
-          },
-          litres: {
-            type: Number,
-            required: [true, "Litres field is required"],
-          },
+        weight: {
+          type: Number,
+          min: [200, "Minimum weight for a cow is 200 kilos"],
+          max: [2500, "Maximum weight for a cow is 2500 kilos"],
+          required: [true, "Weight field is required"],
         },
-      ],
-    },
+      },
+    ],
+    milk_daily: [
+      {
+        date: {
+          type: Date,
+          default: Date.now(),
+        },
+        litres: {
+          type: Number,
+          min: [0, "Minimum daily milk yield is 0 litres"],
+          max: [75, "Maximum daily milk yield is 75 litres"],
+          required: [true, "Litres field is required"],
+        },
+      },
+    ],
     breed: {
-      type: String, 
+      type: String,
       required: [true, " Breed is required"],
     },
     history: String,
@@ -55,22 +52,6 @@ const dairySchema = new Schema(
     autoIndex: true,
   }
 );
-
-const breed = [
-  "fresian",
-  "ayrshire",
-  "guernsey",
-  "brown Swiss",
-  "holstein",
-  "jeysey",
-];
-const history = [
-  "foot rot",
-  "foot and mouth",
-  "mastitis",
-  "liver fluke",
-  "grass tetany",
-];
 
 const dairy = model("dairy", dairySchema);
 
