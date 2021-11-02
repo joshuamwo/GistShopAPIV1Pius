@@ -20,7 +20,7 @@ const taskSchema = new Schema(
     // autoIndex: true,
   }
 );
-// taskSchema.index({ createdAt: 1 }, { expireAfterSeconds: 86400 });
+taskSchema.index({ createdAt: 1 }, { expireAfterSeconds: 86400 });
 
 const taskModel = model("task", taskSchema);
 module.exports = taskModel;
