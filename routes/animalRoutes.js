@@ -1,6 +1,6 @@
 const express = require("express");
 var animalRouter = express.Router();
-var animalController = require("../controllers/animals");
+var animalController = require("../CONTROLLERS/animals");
 
 animalRouter
   .route(`/:department`)

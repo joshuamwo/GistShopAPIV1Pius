@@ -1,6 +1,6 @@
 const express = require("express");
 const logRouter = express.Router();
-var logController = require("../controllers/logs")
+var logController = require("../CONTROLLERS/logs");
 
 logRouter.route(`/`).get(logController.getLogs);
 

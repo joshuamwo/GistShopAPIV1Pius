@@ -1,5 +1,4 @@
-var task = require("../models/taskSchema");
-
+var task = require("../MODELS/taskSchema");
 
 exports.getTasks = (req, res, next) => {
   task
@@ -73,8 +72,6 @@ exports.deleteTask = (req, res, next) => {
     )
     .catch((err) => next(err));
 };
-
-
 
 exports.postTask = (req, res, next) => {
   task

@@ -1,85 +1,111 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var mongoose = require('mongoose');
-var passport = require('passport');
-var cors = require('cors');
-require('./config/authenticate');
+const createError = require("http-errors");
+const express = require("express");
+const path = require("path");
+const logger = require("morgan");
+const mongoose = require("mongoose");
+const options = require("./CONFIG/mongooseOptions");
+const passport = require("passport");
+const cors = require("cors");
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+require("./CONFIG/authenticate");
+require("dotenv").config({ path: `${__dirname}/CONFIG/.env` });
 
-var animalRouter = require('./routes/animalRoutes');
-var authRouter = require('./routes/authRoutes');
-var inventoryRouter = require('./routes/inventoryRoutes');
-var workerRouter = require('./routes/workerRoutes');
-var taskRouter = require('./routes/taskRoutes');
-var logRouter = require('./routes/logRoutes');
+/*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      -CHAT IMPORTS
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
+const chatConfig = require("./CONFIG/chatConfig");
+/*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      -ROUTE IMPORTS
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
+const animalRouter = require("./ROUTES/animalRoutes");
+const authRouter = require("./ROUTES/authRoutes");
+const inventoryRouter = require("./ROUTES/inventoryRoutes");
+const workerRouter = require("./ROUTES/workerRoutes");
+const taskRouter = require("./ROUTES/taskRoutes");
+const logRouter = require("./ROUTES/logRoutes");
 
-require('dotenv').config({ path: `${__dirname}/config/.env` });
+/*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        -WE CREATE SERVER TO BIND OUR SOCKET SERVER WITH 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
+const app = express();
+const httpServer = createServer(app);
 
-var app = express();
+/*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      -Create an new server instance 
+                      -bind the socket io server to the http server
+                      -io.on fire up upon connection to client ion.on(event, callback handler)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
+const io = new Server(httpServer);
+io.on("connection", (socket) => chatConfig(socket));
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+/*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      -VIEW ENGINE SETUP
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "jade");
 
-app.use(cors({ credentials: true, origin: true }))
-app.use(logger('dev'));
+/*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        -MIDDLEWARE
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
+app.use(cors({ credentials: true, origin: true }));
+app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(passport.initialize());
-
-
-app.use('/', authRouter);
-app.use('/animals',passport.authenticate('jwt', {session: false}), animalRouter);
-app.use('/inventory', passport.authenticate('jwt', {session: false}),inventoryRouter);
-app.use('/workers', passport.authenticate('jwt', {session: false}),workerRouter);
-app.use('/tasks', passport.authenticate('jwt', {session: false}),taskRouter);
-app.use('/logs', passport.authenticate('jwt', {session: false}),logRouter);
-
-
-
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404));
-});
-
-// error handler
 app.use(function (err, req, res, next) {
+  //locals provide request level info scoped to  that particular req eg res.locals.user
   // set locals, only providing error in development
   res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
+  res.locals.error = req.app.get("env") === "development" ? err : {};
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.render("error");
 });
 
+/*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                ROUTE MOUNTING
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
+app.use("/", authRouter);
+app.use(
+  "/animals",
+  passport.authenticate("jwt", { session: false }),
+  animalRouter
+);
+app.use(
+  "/inventory",
+  passport.authenticate("jwt", { session: false }),
+  inventoryRouter
+);
+app.use(
+  "/workers",
+  passport.authenticate("jwt", { session: false }),
+  workerRouter
+);
+app.use("/tasks", passport.authenticate("jwt", { session: false }), taskRouter);
+app.use("/logs", passport.authenticate("jwt", { session: false }), logRouter);
 
-const options = {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  autoIndex: true,
-  keepAlive: true,
-  poolSize: 10,
-  bufferMaxEntries: 0,
-  connectTimeoutMS: 10000,
-  socketTimeoutMS: 45000,
-  family: 4, // Use IPv4, skip trying IPv6
-  useFindAndModify: false,
-  useUnifiedTopology: true
-}
-
+/*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        -DB CONNECTION SETUP
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
 const connect = () => {
-  mongoose.connect(process.env.MONGO_URI, options)
-  .then(res => {
-    console.log('connection to server alive on port: ' +port);
-  },err => console.log(err))
-  .catch(err => console.log(err))
+  mongoose
+    .connect(process.env.MONGO_URI, options)
+    .then(
+      (res) => {
+        console.log(`connected!`);
+      },
+      (err) => console.log(err)
+    )
+    .catch((err) => console.log(err));
+};
 
-}
-var port = process.env.PORT || 5000;
-app.listen(port);
+/*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                          -PORT LISTENER
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
+const port = process.env.PORT || 5000;
+httpServer.listen(port);
 connect();
 
 module.exports = app;

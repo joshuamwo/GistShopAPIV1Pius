@@ -1,12 +1,11 @@
-var workerModel = require('../models/workerSchema');
-var beefModel = require('../models/beefSchema');
-var inventoryModel = require('../models/inventorySchema');
-var layerModel = require('../models/layerSchema');
-var dairyModel = require('../models/dairySchema');
-var pigModel = require('../models/pigSchema');
-var taskModel = require('../models/taskSchema');
-
-var faker = require('faker');
+var beefModel = require("../MODELS/animals/beefSchema");
+var layerModel = require("../MODELS/animals/layerSchema");
+var dairyModel = require("../MODELS/animals/dairySchema");
+var pigModel = require("../MODELS/animals/pigSchema");
+var taskModel = require("../MODELS/taskSchema");
+var workerModel = require("../MODELS/workerSchema");
+var inventoryModel = require("../MODELS/inventory/inventorySchema");
+var faker = require("faker");
 
 const seedWorkers = () => {
   for (let i = 0; i < 10; i++) {
@@ -14,13 +13,13 @@ const seedWorkers = () => {
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
       email: faker.internet.email(),
-      password: '123456',
+      password: "123456",
       department: "layers",
       title: faker.name.jobTitle(),
     });
-    workerModel.create(newWorker)
+    workerModel.create(newWorker);
   }
-}
+};
 
 const seedBeef = () => {
   var i;
@@ -35,9 +34,9 @@ const seedBeef = () => {
       breed: "charolais",
       history: "Aggressive to strangers",
     });
-    beefModel.create(newBeef)
+    beefModel.create(newBeef);
   }
-}
+};
 
 const seedDairy = () => {
   var i;
@@ -60,9 +59,9 @@ const seedDairy = () => {
       breed: "Brown swiss",
       history: "ticks",
     });
-    dairyModel.create(newDairy)
+    dairyModel.create(newDairy);
   }
-}
+};
 
 const seedPigs = () => {
   var i;
@@ -77,9 +76,9 @@ const seedPigs = () => {
       breed: "Duroc",
       history: "Dysentry, female, gives birth to litters above 10",
     });
-    pigModel.create(newPig)
+    pigModel.create(newPig);
   }
-}
+};
 
 const seedLayers = () => {
   var i;
@@ -98,34 +97,31 @@ const seedLayers = () => {
       breed: "Golden comet",
       history: "Cannibalism",
     });
-    layerModel.create(newLayer)
+    layerModel.create(newLayer);
   }
-}
+};
 
 const seedInventory = () => {
-
   var newInventory = new inventoryModel({
-    name: 'maize straws',
+    name: "maize straws",
     amount: 1500,
     unit_weight: 90,
-    vendor: 'triple-A growers',
+    vendor: "triple-A growers",
   });
-  inventoryModel.create(newInventory)
-}
+  inventoryModel.create(newInventory);
+};
 
 const seedTask = () => {
-
   // var i;
   // for (i = 0; i < 3; i++) {
-    var newTask = new taskModel({
-      date: faker.date.past(),
-      department: 'layers',
-      instruction: "clean chicken coops",
-    });
-    taskModel.create(newTask)
+  var newTask = new taskModel({
+    date: faker.date.past(),
+    department: "layers",
+    instruction: "clean chicken coops",
+  });
+  taskModel.create(newTask);
   // }
-
-}
+};
 
 const seeder = () => {
   // seedWorkers();
@@ -135,5 +131,5 @@ const seeder = () => {
   // seedLayers();
   // seedInventory();
   // seedTask();
-}
+};
 module.exports = seeder;

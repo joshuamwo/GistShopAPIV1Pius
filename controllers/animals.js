@@ -1,7 +1,7 @@
-var beefModel = require("../models/beefSchema");
-var dairyModel = require("../models/dairySchema");
-var layerModel = require("../models/layerSchema");
-var pigModel = require("../models/pigSchema");
+var beefModel = require("../MODELS/animals/beefSchema");
+var dairyModel = require("../MODELS/animals/dairySchema");
+var layerModel = require("../MODELS/animals/layerSchema");
+var pigModel = require("../MODELS/animals/pigSchema");
 
 const getModel = (department) => {
   if (department === "beefs") return beefModel;
@@ -10,7 +10,6 @@ const getModel = (department) => {
   else if (department === "pigs") return pigModel;
   else return null;
 };
-
 
 exports.getAnimalsByDept = (req, res, next) => {
   getModel(req.params.department)
@@ -62,8 +61,6 @@ exports.addAnimalToDept = (req, res, next) => {
       res.json(err.errors);
     });
 };
-
-
 
 exports.getAnimalById = (req, res, next) => {
   getModel(req.params.department)

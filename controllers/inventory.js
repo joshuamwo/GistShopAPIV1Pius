@@ -1,6 +1,6 @@
 const { isExportDeclaration } = require("typescript");
-var inventory = require("../models/inventorySchema");
-var logs = require("../models/logSchema");
+var inventory = require("../MODELS/inventory/inventorySchema");
+var logs = require("../MODELS/inventory/logSchema");
 
 exports.getAllInventoryItems = (req, res, next) => {
   inventory
@@ -44,7 +44,6 @@ exports.addInventoryItem = (req, res, next) => {
       res.json(err.errors);
     });
 };
-
 
 exports.getItemById = (req, res, next) => {
   inventory
