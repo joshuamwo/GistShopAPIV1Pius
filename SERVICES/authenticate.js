@@ -1,6 +1,6 @@
 const passport = require("passport");
 const localStrategy = require("passport-local").Strategy;
-const workerModel = require("../MODELS/workerSchema");
+const workerModel = require("../Models/workerSchema");
 const JWTStrategy = require("passport-jwt").Strategy;
 const ExtractJWT = require("passport-jwt").ExtractJwt;
 
@@ -83,6 +83,7 @@ passport.use(
 );
 
 passport.use(
+  "jwt",
   new JWTStrategy(
     {
       secretOrKey: process.env.secret_key,

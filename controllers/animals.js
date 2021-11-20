@@ -1,7 +1,7 @@
-var beefModel = require("../MODELS/animals/beefSchema");
-var dairyModel = require("../MODELS/animals/dairySchema");
-var layerModel = require("../MODELS/animals/layerSchema");
-var pigModel = require("../MODELS/animals/pigSchema");
+const beefModel = require("../Models/animals/beefSchema");
+const dairyModel = require("../Models/animals/dairySchema");
+const layerModel = require("../Models/animals/layerSchema");
+const pigModel = require("../Models/animals/pigSchema");
 
 const getModel = (department) => {
   if (department === "beefs") return beefModel;
@@ -77,7 +77,7 @@ exports.getAnimalById = (req, res, next) => {
 };
 
 exports.editAnimalById = (req, res, next) => {
-  var updatedAnimal = req.body;
+  const updatedAnimal = req.body;
   const update =
     req.body?.op === "milk"
       ? { $push: { milk_daily: updatedAnimal.milk_daily } }

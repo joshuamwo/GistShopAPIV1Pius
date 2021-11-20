@@ -1,15 +1,15 @@
-var beefModel = require("../MODELS/animals/beefSchema");
-var layerModel = require("../MODELS/animals/layerSchema");
-var dairyModel = require("../MODELS/animals/dairySchema");
-var pigModel = require("../MODELS/animals/pigSchema");
-var taskModel = require("../MODELS/taskSchema");
-var workerModel = require("../MODELS/workerSchema");
-var inventoryModel = require("../MODELS/inventory/inventorySchema");
-var faker = require("faker");
+const beefModel = require("../Models/animals/beefSchema");
+const layerModel = require("../Models/animals/layerSchema");
+const dairyModel = require("../Models/animals/dairySchema");
+const pigModel = require("../Models/animals/pigSchema");
+const taskModel = require("../Models/taskSchema");
+const workerModel = require("../Models/workerSchema");
+var inventoryModel = require("../Models/inventory/inventorySchema");
+const faker = require("faker");
 
 const seedWorkers = () => {
   for (let i = 0; i < 10; i++) {
-    var newWorker = new workerModel({
+    const newWorker = new workerModel({
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
       email: faker.internet.email(),
@@ -24,7 +24,7 @@ const seedWorkers = () => {
 const seedBeef = () => {
   var i;
   for (i = 0; i < 4; i++) {
-    var newBeef = new beefModel({
+    const newBeef = new beefModel({
       name: faker.animal.cow(),
       age_in_weeks: 57,
       weekly_weight: [
@@ -41,7 +41,7 @@ const seedBeef = () => {
 const seedDairy = () => {
   var i;
   for (i = 0; i < 5; i++) {
-    var newDairy = new dairyModel({
+    const newDairy = new dairyModel({
       name: faker.animal.cow(),
       age_in_weeks: 100,
       weekly_weight: [
@@ -66,7 +66,7 @@ const seedDairy = () => {
 const seedPigs = () => {
   var i;
   for (i = 0; i < 5; i++) {
-    var newPig = new pigModel({
+    const newPig = new pigModel({
       name: faker.animal.cat(),
       age_in_weeks: 14,
       weekly_weight: [
@@ -83,7 +83,7 @@ const seedPigs = () => {
 const seedLayers = () => {
   var i;
   for (i = 0; i < 15; i++) {
-    var newLayer = new layerModel({
+    const newLayer = new layerModel({
       name: faker.name.firstName(),
       age_in_weeks: 20,
       weekly_weight: [
@@ -102,7 +102,7 @@ const seedLayers = () => {
 };
 
 const seedInventory = () => {
-  var newInventory = new inventoryModel({
+  const newInventory = new inventoryModel({
     name: "maize straws",
     amount: 1500,
     unit_weight: 90,
@@ -114,7 +114,7 @@ const seedInventory = () => {
 const seedTask = () => {
   // var i;
   // for (i = 0; i < 3; i++) {
-  var newTask = new taskModel({
+  const newTask = new taskModel({
     date: faker.date.past(),
     department: "layers",
     instruction: "clean chicken coops",

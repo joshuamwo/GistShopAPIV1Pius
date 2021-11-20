@@ -1,4 +1,4 @@
-var task = require("../MODELS/taskSchema");
+const task = require("../Models/taskSchema");
 
 exports.getTasks = (req, res, next) => {
   task

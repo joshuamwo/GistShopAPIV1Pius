@@ -1,6 +1,6 @@
 const express = require("express");
-var workerRouter = express.Router();
-var workerController = require("../CONTROLLERS/workers");
+const workerRouter = express.Router();
+const workerController = require("../Controllers/workers");
 
 workerRouter
   .route(`/`)

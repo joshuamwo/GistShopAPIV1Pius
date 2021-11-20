@@ -1,21 +1,20 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
-require('mongoose-currency').loadType(mongoose);
+require("mongoose-currency").loadType(mongoose);
 const Currency = mongoose.Types.Currency;
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
 const value = {
   type: String,
   required: [true, "This field is required"],
   trim: true,
   unique: false,
-}
-
-var validateEmail = function (email) {
-  var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  return re.test(email);
 };
 
+const validateEmail = function (email) {
+  const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  return re.test(email);
+};
 
 const workerSchema = new Schema(
   {
@@ -44,19 +43,18 @@ const workerSchema = new Schema(
 
 /* a prehook that is called before the user info is stored in the database 
 this hook will hash the plain text password befor storing it*/
-workerSchema.pre('save', async function (next) {
+workerSchema.pre("save", async function (next) {
   const worker = this;
   const hash = await bcrypt.hash(this.password, 10);
   this.password = hash;
   next();
 });
 
-workerSchema.methods.isValidPassword = async function(password) {
+workerSchema.methods.isValidPassword = async function (password) {
   const worker = this;
   const compare = await bcrypt.compare(password, worker.password);
   return compare;
-}
+};
 
-
-const workers = model('worker', workerSchema);
+const workers = model("worker", workerSchema);
 module.exports = workers;

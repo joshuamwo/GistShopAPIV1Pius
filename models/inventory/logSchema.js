@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
 
-var validateEmail = function (email) {
-	var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-	return re.test(email);
+const validateEmail = function (email) {
+  const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  return re.test(email);
 };
 
 const logSchema = new Schema(
@@ -21,11 +21,11 @@ const logSchema = new Schema(
     },
     product: {
       type: String,
-      required: [true, 'The product field is required'],
+      required: [true, "The product field is required"],
     },
     amount: {
       type: Number,
-      required: [true, 'The amount field is required'],
+      required: [true, "The amount field is required"],
     },
   },
   {

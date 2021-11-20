@@ -1,6 +1,6 @@
 const { isExportDeclaration } = require("typescript");
-var inventory = require("../MODELS/inventory/inventorySchema");
-var logs = require("../MODELS/inventory/logSchema");
+const inventory = require("../Models/inventory/inventorySchema");
+const logs = require("../Models/inventory/logSchema");
 
 exports.getAllInventoryItems = (req, res, next) => {
   inventory
@@ -69,7 +69,7 @@ exports.editItemById = (req, res, next) => {
     )
     .then(
       (object) => {
-        var originalAmount = object.amount;
+        const originalAmount = object.amount;
         const newLog = new logs({
           email: req.body.email,
           product: req.body.name,

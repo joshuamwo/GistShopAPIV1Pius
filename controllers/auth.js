@@ -1,13 +1,12 @@
-var workers = require("../MODELS/workerSchema");
-var passport = require("passport");
-var jwt = require("jsonwebtoken");
-
-var seed = require("../CONFIG/seed");
+const workers = require("../Models/workerSchema");
+const passport = require("passport");
+const jwt = require("jsonwebtoken");
+const seed = require("../Config/seed");
 
 require("dotenv").config({ path: `${__dirname}../CONFIG/.env` });
 
 exports.register = (req, res, next) => {
-  var newWorker = new workers({
+  const newWorker = new workers({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     email: req.body.email,

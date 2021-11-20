@@ -1,7 +1,27 @@
-const express = require('express');
-const passport = require('passport');
+const express = require("express");
+const path = require("path");
+const logger = require("morgan");
+const passport = require("passport");
+const cors = require("cors");
 
+module.exports = app = express();
 
-const app = express();
-
-
+app.use(cors({ credentials: true, origin: true }));
+app.use(logger("dev"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "public")));
+app.use(passport.initialize());
+app.use(function (err, req, res, next) {
+  /*****************
+   *locals provide request level info scoped to  that particular req eg res.locals.user
+   *set locals, only providing error in development
+   *****************/
+  res.locals.message = err.message;
+  res.locals.error = req.app.get("env") === "development" ? err : {};
+  /*****************
+   *render the error page
+   *****************/
+  res.status(err.status || 500);
+  res.render("error");
+});
