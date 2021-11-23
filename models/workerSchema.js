@@ -1,34 +1,45 @@
 const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
 require("mongoose-currency").loadType(mongoose);
-const Currency = mongoose.Types.Currency;
 const bcrypt = require("bcrypt");
 
 const value = {
   type: String,
   required: [true, "This field is required"],
-  trim: true,
-  unique: false,
 };
 
-const validateEmail = function (email) {
-  const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+const validateEmail = (email) => {
+  var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   return re.test(email);
 };
+
+const imageSchema = new mongoose.Schema({
+  data: {
+    type: Buffer,
+    required: [true, "Profile photo is required"]
+  },
+  contentType: String,
+})
+
 
 const workerSchema = new Schema(
   {
     firstName: value,
     lastName: value,
+    profilePicture: imageSchema,
     title: value,
     department: value,
     email: {
       type: String,
+      trim: true,
+      lowercase: true,
       unique: true,
-      required: [true, "The email address is required"],
-      index: true,
-      dropDups: true,
+      required: "Email address is required",
       validate: [validateEmail, "Please fill a valid email address"],
+      match: [
+        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+        "Please fill a valid email address",
+      ],
     },
     password: value,
 

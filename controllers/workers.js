@@ -38,8 +38,23 @@ exports.getWorkerById = (req, res, next) => {
 };
 
 exports.addWorker = (req, res, next) => {
+  const newWorker = {
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    userName: req.body.userName,
+    department: req.body.department,
+    title: req.body.title,
+    email: req.body.email,
+    password: req.body.password,
+    profilePicture: {
+      data: req?.file?.buffer,
+      contentType: req?.file?.mimetype,
+    },
+  };
+
+
   workerModel
-    .create(req.body)
+    .create(newWorker)
     .then(
       (newWorker) => {
         res.statusCode = 200;
@@ -70,7 +85,7 @@ exports.editWorkerById = (req, res, next) => {
     .findByIdAndUpdate(
       req.params.workerId,
       {
-        $set: req.body,
+        $set: req.body && req.files,
       },
       { new: true, runValidators: true }
     )
