@@ -1,8 +1,9 @@
 const express = require("express");
 const path = require("path");
-const connect = require("./services/dbConnect");
 require("dotenv").config({ path: `${__dirname}/CONFIG/.env` });
 require("./services/authenticate");
+const connect = require("./services/dbConnect");
+
 
 /*****************
  *SERVER INITILIZATIONS
