@@ -13,9 +13,10 @@ const seedWorkers = () => {
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
       email: faker.internet.email(),
-      password: "123456",
-      department: "layers",
-      title: faker.name.jobTitle(),
+      password: "password",
+      department: "all",
+      // title: faker.name.jobTitle(),
+      title: "manager",
     });
     workerModel.create(newWorker);
   }
@@ -87,8 +88,8 @@ const seedLayers = () => {
       name: faker.name.firstName(),
       age_in_weeks: 20,
       weekly_weight: [
-        { date: Date.now(), weight: 1.14 },
-        { date: Date.now(), weight: 1.15 },
+        { date: Date.now(), weight: 1.7 },
+        { date: Date.now(), weight: 1.98 },
       ],
       eggs_weekly: [
         { date: Date.now(), number: 2 },
@@ -107,6 +108,7 @@ const seedInventory = () => {
     amount: 1500,
     unit_weight: 90,
     vendor: "triple-A growers",
+    department: "beefs"
   });
   inventoryModel.create(newInventory);
 };
@@ -125,7 +127,7 @@ const seedTask = () => {
 
 const seeder = () => {
   // seedWorkers();
-  seedBeef();
+  // seedBeef();
   // seedDairy();
   // seedPigs();
   // seedLayers();
