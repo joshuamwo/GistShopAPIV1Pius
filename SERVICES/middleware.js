@@ -3,7 +3,6 @@ const path = require("path");
 const logger = require("morgan");
 const passport = require("passport");
 const cors = require("cors");
-const multert = require("multer");
 const helmet  = require("helmet");
 
 module.exports = app = express();

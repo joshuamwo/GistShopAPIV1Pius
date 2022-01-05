@@ -1,8 +1,8 @@
 const express = require("express");
 const path = require("path");
-const connect = require("./Services/dbConnect");
+const connect = require("./services/dbConnect");
 require("dotenv").config({ path: `${__dirname}/CONFIG/.env` });
-require("./Services/authenticate");
+require("./services/authenticate");
 
 /*****************
  *SERVER INITILIZATIONS
@@ -18,7 +18,7 @@ app.set("view engine", "jade");
 /*****************
  *MIDDLEWARE
  *****************/
-app.use(require("./Services/middleware"));
+app.use(require("./services/middleware"));
 app.use(require("./Routes/ROUTE_MOUNTER"));
 
 /*****************

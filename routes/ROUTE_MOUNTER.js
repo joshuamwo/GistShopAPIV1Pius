@@ -11,7 +11,7 @@ const conversationRouter = require("./chat/conversationRoutes");
 const passport = require('passport');
 const multer = require('multer');
 
-require("../Services/authenticate");
+require("../services/authenticate");
 module.exports = app = express();
 
 app.use("/", authRouter);
