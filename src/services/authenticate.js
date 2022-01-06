@@ -4,7 +4,7 @@ const workerModel = require("../models/workerSchema");
 const JWTStrategy = require("passport-jwt").Strategy;
 const ExtractJWT = require("passport-jwt").ExtractJwt;
 
-require("dotenv").config({ path: `${__dirname}/../../.env` });
+require("dotenv").config({ path: `.env` });
 
 passport.use(
   "login",
