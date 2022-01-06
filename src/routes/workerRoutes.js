@@ -1,6 +1,6 @@
 const express = require("express");
 const workerRouter = express.Router();
-const workerController = require("../Controllers/workers");
+const workerController = require("../controllers/workers");
 const path = require("path");
 
 const multer = require("multer");

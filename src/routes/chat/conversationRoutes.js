@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const chatController = require("../../Controllers/chat");
+const chatController = require("../../controllers/chat");
 
 /*****************
  *post/start  new conversation

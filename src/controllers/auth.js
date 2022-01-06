@@ -1,7 +1,7 @@
 const workers = require("../models/workerSchema");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
-const seed = require("../Config/seed");
+const seed = require("../config/seed");
 
 require("dotenv").config({ path: `${__dirname}/../../.env` });
 

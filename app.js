@@ -19,7 +19,7 @@ app.set("view engine", "jade");
  *MIDDLEWARE
  *****************/
 app.use(require("./src/services/middleware"));
-app.use(require("./src/Routes/ROUTE_MOUNTER"));
+app.use(require("./src/routes/ROUTE_MOUNTER"));
 
 /*****************
  *SERVER INSTANTIATION
