@@ -24,7 +24,7 @@ app.use(require("./src/routes/ROUTE_MOUNTER"));
 /*****************
  *SERVER INSTANTIATION
  *****************/
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8080;
 connect();
 app.listen(port);
 
