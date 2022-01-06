@@ -3,7 +3,7 @@ const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const seed = require("../Config/seed");
 
-require("dotenv").config({ path: `${__dirname}../CONFIG/.env` });
+require("dotenv").config({ path: `${__dirname}/../../.env` });
 
 exports.register = (req, res, next) => {
   const newWorker = new workers({
