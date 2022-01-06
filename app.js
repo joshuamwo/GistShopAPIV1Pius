@@ -26,6 +26,6 @@ app.use(require("./src/routes/ROUTE_MOUNTER"));
  *****************/
 const port = process.env.PORT || 8080;
 connect();
-app.listen(port);
+// app.listen(port);
 
 module.exports = app;
