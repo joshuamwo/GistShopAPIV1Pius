@@ -1,4 +1,4 @@
-const logs = require("../Models/inventory/logSchema");
+const logs = require("../models/inventory/logSchema");
 
 exports.getLogs = (req, res, next) => {
   logs

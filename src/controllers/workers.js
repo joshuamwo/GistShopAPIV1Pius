@@ -1,4 +1,4 @@
-const workerModel = require("../Models/workerSchema");
+const workerModel = require("../models/workerSchema");
 
 exports.getAllWorkers = (req, res, next) => {
   workerModel
@@ -51,7 +51,6 @@ exports.addWorker = (req, res, next) => {
       contentType: req?.file?.mimetype,
     },
   };
-
 
   workerModel
     .create(newWorker)

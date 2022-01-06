@@ -1,4 +1,4 @@
-const workers = require("../Models/workerSchema");
+const workers = require("../models/workerSchema");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const seed = require("../Config/seed");

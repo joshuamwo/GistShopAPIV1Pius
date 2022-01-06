@@ -1,6 +1,6 @@
 const { isExportDeclaration } = require("typescript");
-const inventory = require("../Models/inventory/inventorySchema");
-const logs = require("../Models/inventory/logSchema");
+const inventory = require("../models/inventory/inventorySchema");
+const logs = require("../models/inventory/logSchema");
 
 exports.getAllInventoryItems = (req, res, next) => {
   inventory

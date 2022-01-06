@@ -1,7 +1,7 @@
-const beefModel = require("../Models/animals/beefSchema");
-const dairyModel = require("../Models/animals/dairySchema");
-const layerModel = require("../Models/animals/layerSchema");
-const pigModel = require("../Models/animals/pigSchema");
+const beefModel = require("../models/animals/beefSchema");
+const dairyModel = require("../models/animals/dairySchema");
+const layerModel = require("../models/animals/layerSchema");
+const pigModel = require("../models/animals/pigSchema");
 
 const getModel = (department) => {
   if (department === "beefs") return beefModel;

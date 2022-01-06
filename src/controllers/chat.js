@@ -1,5 +1,5 @@
-const Conversation = require("../Models/chat/conversationSchema");
-const Message = require("../Models/chat/messageSchema");
+const Conversation = require("../models/chat/conversationSchema");
+const Message = require("../models/chat/messageSchema");
 
 /*****************
  *post/start  new conversation
@@ -58,13 +58,13 @@ exports.writeMessage = async (req, res) => {
   }
 };
 
-exports.readMessage = async (req,res) => {
+exports.readMessage = async (req, res) => {
   try {
     const messages = await Message.find({
-      conversationId: req.params.conversation
+      conversationId: req.params.conversation,
     });
     res.status(200).json(messages);
   } catch (err) {
     res.status(500).json(err);
   }
-}
+};

@@ -1,10 +1,10 @@
-const beefModel = require("../Models/animals/beefSchema");
-const layerModel = require("../Models/animals/layerSchema");
-const dairyModel = require("../Models/animals/dairySchema");
-const pigModel = require("../Models/animals/pigSchema");
-const taskModel = require("../Models/taskSchema");
-const workerModel = require("../Models/workerSchema");
-var inventoryModel = require("../Models/inventory/inventorySchema");
+const beefModel = require("../models/animals/beefSchema");
+const layerModel = require("../models/animals/layerSchema");
+const dairyModel = require("../models/animals/dairySchema");
+const pigModel = require("../models/animals/pigSchema");
+const taskModel = require("../models/taskSchema");
+const workerModel = require("../models/workerSchema");
+var inventoryModel = require("../models/inventory/inventorySchema");
 const faker = require("faker");
 
 const seedWorkers = () => {
@@ -108,7 +108,7 @@ const seedInventory = () => {
     amount: 1500,
     unit_weight: 90,
     vendor: "triple-A growers",
-    department: "beefs"
+    department: "beefs",
   });
   inventoryModel.create(newInventory);
 };
