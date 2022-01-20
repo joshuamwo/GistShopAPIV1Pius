@@ -29,5 +29,18 @@
   },
   "engines": {
     "node": ">=0.12"
-  }
+  },
+  "description": "\"Edit me later\"",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PiusKariuki/Kilimo_API.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PiusKariuki/Kilimo_API/issues"
+  },
+  "homepage": "https://github.com/PiusKariuki/Kilimo_API#readme"
 }

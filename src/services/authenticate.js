@@ -19,7 +19,7 @@ passport.use(
         .then(
           (worker) => {
             if (!worker)
-              return done(null, false, { message: "incorrect email address" });
+              return done(null, false, { emailErr: "incorrect email address" });
 
             /*.................nested promise to verify  password....................... */
             worker
@@ -29,12 +29,12 @@ passport.use(
                   if (validate)
                     done(null, validate, { department: worker.department });
                   else if (!validate)
-                    done(null, false, { message: "Invalid password" });
+                    done(null, false, { passErr: "Invalid password" });
                 },
-                (err) => done(null, false, { mesage: "incorrect password" })
+                (err) => done(null, false, { passErr: "incorrect password" })
               )
               .catch((err) =>
-                done(null, false, { message: "Incorrect password" })
+                done(null, false, { passErr: "Incorrect password" })
               );
             /*......................end of nested promise..............................*/
           },
