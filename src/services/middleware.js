@@ -7,7 +7,7 @@ const helmet  = require("helmet");
 
 module.exports = app = express();
 
-app.use(cors({ credentials: true, origin: true }));
+app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
