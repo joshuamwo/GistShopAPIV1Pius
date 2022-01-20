@@ -34,7 +34,7 @@ exports.userLogin = (req, res, next) => {
     if (err || !user) {
       res.statusCode = 401;
       res.setHeader("Content-Type", "application/json");
-      res.json(info.message);
+      res.json(info);
     }
 
     req.login(user, { session: false }, (error) => {
