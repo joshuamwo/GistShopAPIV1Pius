@@ -41,7 +41,6 @@ exports.addWorker = (req, res, next) => {
   const newWorker = {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
-    userName: req.body.userName,
     department: req.body.department,
     title: req.body.title,
     email: req.body.email,
