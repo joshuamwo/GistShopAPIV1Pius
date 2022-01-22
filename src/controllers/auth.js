@@ -29,7 +29,9 @@ exports.register = (req, res, next) => {
 				res.setHeader("Content-Type", "application/json");
 				res.json({ token, email, department });
 			},
-			(err) => next(err.errors)
+			(err) => {
+            res.status(422).setHeader("Content-Type","application/json").json(err)
+         }
 		)
 		.catch((err) => next(err.errors));
 };
