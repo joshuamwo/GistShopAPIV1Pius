@@ -1,10 +1,9 @@
 const express = require("express");
 const workerRouter = express.Router();
 const workerController = require("../controllers/workers");
-const path = require("path");
 
 const multer = require("multer");
-const { v4: uuidv4 } = require("uuid");
+
 
 const storage = multer.memoryStorage();
 

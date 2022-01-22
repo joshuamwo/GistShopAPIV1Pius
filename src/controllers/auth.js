@@ -8,11 +8,14 @@ exports.register = (req, res, next) => {
 	const newWorker = new workers({
 		firstName: req.body.firstName,
 		lastName: req.body.lastName,
-		email: req.body.email,
-		password: req.body.password,
 		department: req.body.department,
 		title: req.body.title,
-		profilePicture: req.body.profilePicture,
+		email: req.body.email,
+		password: req.body.password,
+		profilePicture: {
+			data: req?.file?.buffer,
+			contentType: req?.file?.mimetype,
+		},
 	});
 
 	workers
