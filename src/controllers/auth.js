@@ -30,7 +30,7 @@ exports.register = async (req, res, next) => {
 	} catch (error) {
 		res.status(422).setHeader("Content-Type", "application/json");
 		if (error.code === 11000) res.json("This user already exists");
-		else res.json(error);
+		else res.json({ error: { errors: { _: { message } } } });
 	}
 };
 
