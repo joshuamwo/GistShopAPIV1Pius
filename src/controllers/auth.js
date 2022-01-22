@@ -23,13 +23,17 @@ exports.register = async (req, res, next) => {
 		const email = req.body.email;
 		const department = req.body.department;
 		const token = jwt.sign({ email }, process.env.secret_key);
-      res.status(200).setHeader("Content-Type", "application/json").json({token,email,department});
+		res
+			.status(200)
+			.setHeader("Content-Type", "application/json")
+			.json({ token, email, department });
 	} catch (error) {
-      res.status(422).setHeader("Content-Type", "application/json").json(error);
-   }
+		res.status(422).setHeader("Content-Type", "application/json");
+		if (error === 11000) res.json("This user already exists");
+		else res.json(error);
+	}
+};
 
-
-   
 exports.userLogin = (req, res, next) => {
 	/* custom callback . gives us access to req res and next coz of js closure */
 	passport.authenticate("login", (err, user, info) => {
