@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 require("dotenv").config({ path: `${__dirname}/../../.env` });
 
-exports.register = (req, res, next) => {
+exports.register = async (req, res, next) => {
 	const newWorker = new workers({
 		firstName: req.body.firstName,
 		lastName: req.body.lastName,
@@ -18,24 +18,18 @@ exports.register = (req, res, next) => {
 		},
 	});
 
-	workers
-		.create(newWorker)
-		.then(
-			(worker) => {
-				const email = req.body.email;
-				const department = req.body.department;
-				const token = jwt.sign({ email }, process.env.secret_key);
-				res.statusCode = 200;
-				res.setHeader("Content-Type", "application/json");
-				res.json({ token, email, department });
-			},
-			(err) => {
-            res.status(422).setHeader("Content-Type","application/json").json(err)
-         }
-		)
-		.catch((err) => next(err.errors));
-};
+	try {
+		await workers.create(newWorker);
+		const email = req.body.email;
+		const department = req.body.department;
+		const token = jwt.sign({ email }, process.env.secret_key);
+      res.status(200).setHeader("Content-Type", "application/json").json({token,email,department});
+	} catch (error) {
+      res.status(422).setHeader("Content-Type", "application/json").json(error);
+   }
 
+
+   
 exports.userLogin = (req, res, next) => {
 	/* custom callback . gives us access to req res and next coz of js closure */
 	passport.authenticate("login", (err, user, info) => {
