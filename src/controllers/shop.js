@@ -45,8 +45,7 @@ exports.updateShopById = async (req, res) => {
 		let updatedShop = await shopModel.findByIdAndUpdate(
 			req.params.shopId,
 			{ $set: newObj },
-			{ runValidators: true },
-			{ new: true }
+			{ runValidators: true, new: true},
 		);
 
 		res
