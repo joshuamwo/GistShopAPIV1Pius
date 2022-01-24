@@ -21,7 +21,6 @@ authRouter.post(
 
 authRouter.post("/login", authController.userLogin);
 
-authRouter.post("/admin/login", authController.adminLogin);
 
 authRouter.post("/logout", authController.logout);
 

@@ -8,10 +8,6 @@ const value = {
   required: [true, "This field is required"],
 };
 
-const validateEmail = (email) => {
-  var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  return re.test(email);
-};
 
 const imageSchema = new mongoose.Schema({
   data: {
@@ -22,28 +18,24 @@ const imageSchema = new mongoose.Schema({
 })
 
 
-const workerSchema = new Schema(
+const userSchema = new Schema(
   {
     firstName: value,
     lastName: value,
-    profilePicture: imageSchema,
-    title: value,
-    department: value,
+    bio: value,
+    userName: value,
     email: {
       type: String,
       trim: true,
       lowercase: true,
       unique: true,
       required: "Email address is required",
-      validate: [validateEmail, "Please fill a valid email address"],
       match: [
         /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
         "Please fill a valid email address",
       ],
     },
     password: value,
-
-    date_employed: { type: Date, default: Date.now() },
   },
   {
     timestamps: true,
@@ -53,19 +45,19 @@ const workerSchema = new Schema(
 );
 
 /* a prehook that is called before the user info is stored in the database 
-this hook will hash the plain text password befor storing it*/
-workerSchema.pre("save", async function (next) {
-  const worker = this;
+this hook will hash the plain text password before storing it*/
+userSchema.pre("save", async function (next) {
+  const user = this;
   const hash = await bcrypt.hash(this.password, 10);
   this.password = hash;
   next();
 });
 
-workerSchema.methods.isValidPassword = async function (password) {
-  const worker = this;
-  const compare = await bcrypt.compare(password, worker.password);
+userSchema.methods.isValidPassword = async function (password) {
+  const user = this;
+  const compare = await bcrypt.compare(password, user.password);
   return compare;
 };
 
-const workers = model("worker", workerSchema);
-module.exports = workers;
+const users = model("user", userSchema);
+module.exports = users;

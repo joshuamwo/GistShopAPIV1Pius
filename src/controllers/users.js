@@ -1,4 +1,4 @@
-const workerModel = require("../models/workerSchema");
+const workerModel = require("../models/userSchema");
 
 exports.getAllWorkers = (req, res, next) => {
   workerModel

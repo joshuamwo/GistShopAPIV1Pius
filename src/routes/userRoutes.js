@@ -1,6 +1,6 @@
 const express = require("express");
 const workerRouter = express.Router();
-const workerController = require("../controllers/workers");
+const userController = require("../controllers/users");
 
 const multer = require("multer");
 
@@ -16,13 +16,13 @@ let upload = multer({ storage, fileFilter });
 
 workerRouter
   .route(`/`)
-  .get(workerController.getAllWorkers)
-  .post(upload.single("profilePicture"), workerController.addWorker);
+  .get(userController.getAllWorkers)
+  .post(upload.single("profilePicture"), userController.addWorker);
 
 workerRouter
   .route("/:workerId")
-  .get(workerController.getWorkerById)
-  .put(upload.single("profilePicture"), workerController.editWorkerById)
-  .delete(workerController.deleteWorkerById);
+  .get(userController.getWorkerById)
+  .put(upload.single("profilePicture"), userController.editWorkerById)
+  .delete(userController.deleteWorkerById);
 
 module.exports = workerRouter;
