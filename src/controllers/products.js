@@ -3,7 +3,7 @@ var productModel = require("../models/productSchema");
 
 exports.addProductToShop = async (req, res) => {
 	let images = [];
-	req.files.forEach((pic) => images.push(pic.originalname));
+	req?.files?.forEach((pic) => images.push(pic.originalname));
 	const newProduct = {
 		name: req.body.name,
 		price: req.body.price,
@@ -38,7 +38,7 @@ exports.getProductById = async (req, res) => {
 	}
 };
 
-exports.updateProductImages = async (req, res) => {
+exports.updateProductById = async (req, res) => {
 	let newImages = [];
 	req.files.forEach((pic) => newImages.push(pic.originalname));
    let newObj = req.body;

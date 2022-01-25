@@ -1,7 +1,7 @@
-const workerModel = require("../models/userSchema");
+const userModel = require("../models/userSchema");
 
-exports.getAllWorkers = (req, res, next) => {
-  workerModel
+exports.getAllUsers = (req, res, next) => {
+  userModel
     .find({})
     .sort("-_id")
     .then(
@@ -15,14 +15,14 @@ exports.getAllWorkers = (req, res, next) => {
     .catch((err) => next(err));
 };
 
-exports.getWorkerById = (req, res, next) => {
-  workerModel
-    .findById(req.params.workerId)
+exports.getUserById = (req, res, next) => {
+  userModel
+    .findById(req.params.userId)
     .then(
-      (worker) => {
+      (user) => {
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
-        res.json(worker);
+        res.json(user);
       },
       (err) => {
         res.statusCode = 422;
@@ -37,8 +37,8 @@ exports.getWorkerById = (req, res, next) => {
     });
 };
 
-exports.addWorker = (req, res, next) => {
-  const newWorker = {
+exports.addUser = (req, res) => {
+  const newUser = {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     department: req.body.department,
@@ -51,13 +51,13 @@ exports.addWorker = (req, res, next) => {
     },
   };
 
-  workerModel
-    .create(newWorker)
+  userModel
+    .create(newUser)
     .then(
-      (newWorker) => {
+      (newUser) => {
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
-        res.json(newWorker);
+        res.json(newUser);
       },
       (err) => {
         if (err.code === 11000) {
@@ -78,20 +78,20 @@ exports.addWorker = (req, res, next) => {
     });
 };
 
-exports.editWorkerById = (req, res, next) => {
-  workerModel
+exports.editUserById = (req, res) => {
+  userModel
     .findByIdAndUpdate(
-      req.params.workerId,
+      req.params.userId,
       {
         $set: req.body && req.files,
       },
       { new: true, runValidators: true }
     )
     .then(
-      (worker) => {
+      (user) => {
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
-        res.json(worker);
+        res.json(user);
       },
       (err) => {
         res.statusCode = 400;
@@ -106,10 +106,10 @@ exports.editWorkerById = (req, res, next) => {
     });
 };
 
-exports.deleteWorkerById = (req, res, next) => {
-  workerModel.findByIdAndDelete(req.params.workerId).then((worker) => {
+exports.deleteUserById = (req, res, next) => {
+  userModel.findByIdAndDelete(req.params.userId).then((user) => {
     res.statusCode = 200;
     res.setHeader("Content-Type", "application/json");
-    res.json(worker);
+    res.json(user);
   });
 };

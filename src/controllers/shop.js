@@ -9,7 +9,7 @@ exports.createShop = async (req, res) => {
 		phoneNumber: req.body.phoneNumber,
 		image: req?.file?.originalname,
 		description: req.body.description,
-		userId: mongoose.mongo.ObjectId(req.body.userId),
+		userId: mongoose.mongo.ObjectId(req.params.userId),
 	};
 
 	try {

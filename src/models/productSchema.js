@@ -7,27 +7,30 @@ const value = {
 	required: [true, "This field is required"],
 };
 
-const productSchema = new Schema({
-	name: value,
-	price: {
-		type: mongoose.Types.Currency,
-		required: "Price field is required",
-	},
-	quantity: {
-		type: Number,
-		min: 0,
-		required: true,
-	},
-	images: [
-		{
-			type: String,
+const productSchema = new Schema(
+	{
+		name: value,
+		price: {
+			type: mongoose.Types.Currency,
+			required: "Price field is required",
 		},
-	],
-	shopId: {
-		type: mongoose.Types.ObjectId,
-		required: true,
+		quantity: {
+			type: Number,
+			min: 0,
+			required: true,
+		},
+		images: [
+			{
+				type: String,
+			},
+		],
+		shopId: {
+			type: mongoose.Types.ObjectId,
+			required: true,
+		},
 	},
-});
+	{ timestamps: true, autoIndex: true, autoCreate: true }
+);
 
 const products = model("product", productSchema);
 

@@ -35,7 +35,7 @@ const shopSchema = new Schema(
 		},
 		image: {
 			type: String,
-			required:  "Profile photo is required",
+			required:  "Image photo is required",
 		},
 		description: value,
 		userId: {
