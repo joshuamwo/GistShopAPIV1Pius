@@ -1,6 +1,21 @@
 var mongoose = require("mongoose");
 var productModel = require("../models/productSchema");
 
+exports.getAllProductsByShopId = async (req, res) => {
+	try {
+		let products = await productModel.find({ shopId: req.params.shopId });
+		res
+			.status(200)
+			.setHeader("Content-Type", "application/json")
+			.json(products);
+	} catch (error) {
+		res
+			.status(422)
+			.setHeader("Content-Type", "application/json")
+			.json(error.message);
+	}
+};
+
 exports.addProductToShop = async (req, res) => {
 	let images = [];
 	req?.files?.forEach((pic) => images.push(pic.originalname));
@@ -14,10 +29,7 @@ exports.addProductToShop = async (req, res) => {
 
 	try {
 		let newProd = await productModel.create(newProduct);
-		res
-			.status(200)
-			.setHeader("Content-Type", "application/json")
-			.json(newProd);
+		res.status(200).setHeader("Content-Type", "application/json").json(newProd);
 	} catch (error) {
 		res
 			.status(422)
@@ -41,7 +53,7 @@ exports.getProductById = async (req, res) => {
 exports.updateProductById = async (req, res) => {
 	let newImages = [];
 	req.files.forEach((pic) => newImages.push(pic.originalname));
-   let newObj = req.body;
+	let newObj = req.body;
 	try {
 		let newProduct = await productModel.findByIdAndUpdate(
 			req.params.productId,
@@ -63,10 +75,7 @@ exports.updateProductById = async (req, res) => {
 exports.deleteProductById = async (req, res) => {
 	try {
 		let deleted = await productModel.findByIdAndDelete(req.params.productId);
-		res
-			.status(200)
-			.setHeader("Content-Type", "application/json")
-			.json(deleted);
+		res.status(200).setHeader("Content-Type", "application/json").json(deleted);
 	} catch (error) {
 		res
 			.status(422)

@@ -12,6 +12,12 @@ const orderSchema = new Schema(
 		subTotal: { type: mongoose.Types.Currency, required: true },
 		tax: { type: mongoose.Types.Currency, required: true },
 		shippingFee: { type: mongoose.Types.Currency, required: true },
+		totalCost: {
+			type: mongoose.Types.Currency,
+			default: function () {
+				return this.subTotal + this.tax + this.shippingFee;
+			},
+		},
 	},
 	{
 		timeStamps: true,
@@ -26,9 +32,11 @@ const orderSchema = new Schema(
 	}
 );
 
-orderSchema
-	.virtual("totalCost")
-	.get(() => this.subTotal + this.tax + this.shippingFee);
+// orderSchema
+// 	.virtual("totalCost")
+// 	.get(() =>{
+//       return `${this}`
+//    });
 
 const orders = model("order", orderSchema);
 

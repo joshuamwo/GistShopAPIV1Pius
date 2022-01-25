@@ -3,7 +3,7 @@ var orderModel = require("../models/orderSchema");
 
 exports.getAllOrdersByUserId = async (req, res) => {
 	try {
-		let orders = orderModel.find({
+		let orders = await orderModel.find({
 			customerId: req.params.userId,
 		})
 		res.status(200).setHeader("Content-Type", "application/json").json(orders);

@@ -1,7 +1,7 @@
 const express = require("express");
 const shopRouter = express.Router();
 const shopController = require("../controllers/shop");
-const productController = require("../controllers/products");
+
 
 const multer = require("multer");
 
@@ -19,18 +19,13 @@ shopRouter
    .get(shopController.getAllShopsByUserId)
 	.post(upload.single("image"), shopController.createShop);
 
+   
 shopRouter
 	.route("/:userId/:shopId")
 	.get(shopController.getShopById)
 	.put(upload.single("image"), shopController.updateShopById)
 	.delete(shopController.deleteShopById)
-	// product-routes
-	.post(upload.any("image"), productController.addProductToShop);
 
-shopRouter
-	.route("/:userId/:shopId/:productId")
-	.get(productController.getProductById)
-	.put(upload.any("image"), productController.updateProductById)
-	.delete(productController.deleteProductById);
+
 
 module.exports = shopRouter;
