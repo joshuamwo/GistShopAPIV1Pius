@@ -4,14 +4,14 @@ var orderModel = require("../models/orderSchema");
 exports.getAllOrdersByUserId = async (req, res) => {
 	try {
 		let orders = orderModel.find({
-			customerId: mongoose.mongo.ObjectId(req.params.userId),
-		});
+			customerId: req.params.userId,
+		})
 		res.status(200).setHeader("Content-Type", "application/json").json(orders);
 	} catch (error) {
 		res
-			.status(error.statusCode)
+			.status(422)
 			.setHeader("Content-Type", "application/json")
-			.json(e.message);
+			.json(error.message);
 	}
 };
 
@@ -42,30 +42,12 @@ exports.addOrder = async (req, res) => {
 };
 
 exports.updateOrderById = async (req, res) => {
-	let newProductIds = [];
-	req.body.productIds.forEach((id) => id);
-	let newObj = {
-		billingId: req.body?.billingId,
-		shippingId: req.body?.shippingId,
-
-		subtotal: req.body?.subtotal,
-		tax: req.body?.tax,
-		shippingFee: req.body?.shippingFee,
-	};
-
-   const update = {
-			// $push: { productIds: req.body.productIds },
-			$set: { billingId: req.body?.billingId },
-			$set: { shippingId: req.body?.shippingId },
-			$set: { subtotal: req.body?.subtotal },
-			$set: { tax: req.body?.tax },
-			$set: { shippingFee: req.body?.shippingFee,},
-		};
+	let { productIds, ...setter } = req.body;
 
 	try {
 		let newOrder = await orderModel.findByIdAndUpdate(
 			req.params.orderId,
-			{ $push: { productIds: req.body.productIds }, $set: update },
+			{ $push: { productIds: productIds }, $set: setter },
 			{ runValidators: true, new: true }
 		);
 		res

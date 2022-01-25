@@ -1,6 +1,18 @@
 const shopModel = require("../models/shopSchema");
 var mongoose = require("mongoose");
 
+exports.getAllShopsByUserId = async (req, res) => {
+	try {
+		let shops = await shopModel.find({ userId: req.params.userId });
+		res.status(200).setHeader("Content-Type", "application/json").json(shops);
+	} catch (error) {
+		res
+			.status(422)
+			.setHeader("Content-Type", "application/json")
+			.json(error.message);
+	}
+};
+
 exports.createShop = async (req, res) => {
 	const newShop = {
 		name: req.body.name,
@@ -13,11 +25,11 @@ exports.createShop = async (req, res) => {
 	};
 
 	try {
-		await shopModel.create(newShop);
+		let brandNew = await shopModel.create(newShop);
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")
-			.json("Successful");
+			.json(brandNew);
 	} catch (error) {
 		res.status(422).setHeader("Content-Type", "application/json");
 		if (error.code == 11000) res.json("Please pick another name");
@@ -31,11 +43,11 @@ exports.getShopById = async (req, res) => {
 	try {
 		let shop = await shopModel.findById(req.params.shopId);
 		res.status(200).setHeader("Content-Type", "application/json").json(shop);
-	} catch (e) {
+	} catch (error) {
 		res
 			.status(422)
 			.setHeader("Content-Type", "application/json")
-			.json(e.message);
+			.json(error.message);
 	}
 };
 
@@ -45,7 +57,7 @@ exports.updateShopById = async (req, res) => {
 		let updatedShop = await shopModel.findByIdAndUpdate(
 			req.params.shopId,
 			{ $set: newObj },
-			{ runValidators: true, new: true},
+			{ runValidators: true, new: true }
 		);
 
 		res
@@ -62,15 +74,15 @@ exports.updateShopById = async (req, res) => {
 
 exports.deleteShopById = async (req, res) => {
 	try {
-		await shopModel.findByIdAndDelete(req.params.shopId);
+		let del = await shopModel.findByIdAndDelete(req.params.shopId);
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")
-			.json("Deleted successfully");
-	} catch (e) {
+			.json(del);
+	} catch (error) {
 		res
 			.status(422)
 			.setHeader("Content-Type", "application/json")
-			.json(e.message);
+			.json(error.message);
 	}
 };

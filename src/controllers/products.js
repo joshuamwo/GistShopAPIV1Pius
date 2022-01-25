@@ -13,11 +13,11 @@ exports.addProductToShop = async (req, res) => {
 	};
 
 	try {
-		await productModel.create(newProduct);
+		let newProd = await productModel.create(newProduct);
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")
-			.json("successful");
+			.json(newProd);
 	} catch (error) {
 		res
 			.status(422)
@@ -62,15 +62,15 @@ exports.updateProductById = async (req, res) => {
 
 exports.deleteProductById = async (req, res) => {
 	try {
-		await productModel.findByIdAndDelete(req.params.productId);
+		let deleted = await productModel.findByIdAndDelete(req.params.productId);
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")
-			.json("Deleted successfully");
-	} catch (e) {
+			.json(deleted);
+	} catch (error) {
 		res
 			.status(422)
 			.setHeader("Content-Type", "application/json")
-			.json(e.message);
+			.json(error.message);
 	}
 };
