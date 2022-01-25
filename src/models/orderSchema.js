@@ -20,7 +20,7 @@ const orderSchema = new Schema(
 		},
 	},
 	{
-		timeStamps: true,
+		timestamps: true,
 		autoIndex: true,
 		autoCreate: true,
 		toObject: {
@@ -31,12 +31,6 @@ const orderSchema = new Schema(
 		},
 	}
 );
-
-// orderSchema
-// 	.virtual("totalCost")
-// 	.get(() =>{
-//       return `${this}`
-//    });
 
 const orders = model("order", orderSchema);
 

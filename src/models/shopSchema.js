@@ -43,7 +43,7 @@ const shopSchema = new Schema(
 			required: true,
 		},
 	},
-	{ timeStamps: true, autoCreate: true, autoIndex: true }
+	{ timestamps: true, autoCreate: true, autoIndex: true }
 );
 
 const shops = model("shop", shopSchema);

@@ -1,4 +1,3 @@
-var mongoose = require("mongoose");
 var orderModel = require("../models/orderSchema");
 
 exports.getAllOrdersByUserId = async (req, res) => {
