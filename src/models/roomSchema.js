@@ -8,46 +8,50 @@ const value = {
 
 const roomSchema = new Schema(
 	{
+		ownerId: {
+			type: String,
+			required: true,
+			unique: true,
+		},
 		productIds: [
 			{
-				type: mongoose.Types.ObjectId,
-				required: true,
+				type: String,
 			},
 		],
 		hostIds: [
 			{
-				type: mongoose.Types.ObjectId,
+				type: String,
 			},
 		],
 
 		userIds: [
 			{
-				type: mongoose.Types.ObjectId,
+				type: String,
 			},
 		],
 		title: value,
-		raisedhands: [
+		raisedHands: [
 			{
-				type: mongoose.Types.ObjectId,
+				type: String,
 			},
 		],
 		speakerIds: [
 			{
-				type: mongoose.Types.ObjectId,
+				type: String,
 			},
 		],
 		invitedIds: [
 			{
-				type: mongoose.Types.ObjectId,
+				type: String,
 			},
 		],
 		status: {
-			type: boolean,
+			type: Boolean,
 			default: true,
 		},
 	},
 	{ timestamps: true, autoIndex: true, autoCreate: true }
 );
 
-const roomModel = model("billing", roomSchema);
+const roomModel = model("rooms", roomSchema);
 module.exports = roomModel;
