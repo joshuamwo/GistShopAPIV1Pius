@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
-require("mongoose-currency").loadType(mongoose);
 
 const value = {
 	type: String,

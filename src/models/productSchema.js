@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
-require("mongoose-currency").loadType(mongoose);
 
 const value = {
 	type: String,
@@ -11,7 +10,7 @@ const productSchema = new Schema(
 	{
 		name: value,
 		price: {
-			type: mongoose.Types.Currency,
+			type: Number,
 			required: "Price field is required",
 		},
 		quantity: {

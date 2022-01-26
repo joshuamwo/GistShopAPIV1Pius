@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
-require("mongoose-currency").loadType(mongoose);
 
 const orderSchema = new Schema(
 	{
@@ -18,11 +17,11 @@ const orderSchema = new Schema(
          required: true
       },
 
-		subTotal: { type: mongoose.Types.Currency, required: true },
-		tax: { type: mongoose.Types.Currency, required: true },
-		shippingFee: { type: mongoose.Types.Currency, required: true },
+		subTotal: { type:Number, required: true },
+		tax: { type: Number, required: true },
+		shippingFee: { type: Number, required: true },
 		totalCost: {
-			type: mongoose.Types.Currency,
+			type: Number,
 			default: function () {
 				return this.subTotal + this.tax + this.shippingFee;
 			},
