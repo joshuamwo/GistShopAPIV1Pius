@@ -8,6 +8,15 @@ const orderSchema = new Schema(
 		billingId: { type: mongoose.Types.ObjectId, required: true },
 		shippingId: { type: mongoose.Types.ObjectId, required: true },
 		productIds: [{ type: mongoose.Types.ObjectId }],
+		status: {
+			type: String,
+			enum: ["pending", "cancelled", "shipped", "delivered"],
+         default: "pending"
+		},
+      shopId: {
+         type: Schema.Types.ObjectId,
+         required: true
+      },
 
 		subTotal: { type: mongoose.Types.Currency, required: true },
 		tax: { type: mongoose.Types.Currency, required: true },

@@ -4,7 +4,32 @@ exports.getAllOrdersByUserId = async (req, res) => {
 	try {
 		let orders = await orderModel.find({
 			customerId: req.params.userId,
-		})
+		});
+		res.status(200).setHeader("Content-Type", "application/json").json(orders);
+	} catch (error) {
+		res
+			.status(422)
+			.setHeader("Content-Type", "application/json")
+			.json(error.message);
+	}
+};
+
+exports.getOrderByProductId = async (req, res) => {
+	try {
+		let orders = await orderModel.find({ productIds: req.params.productId });
+		res.status(200).setHeader("Content-Type", "application/json").json(orders);
+	} catch (error) {
+		res
+			.status(422)
+			.setHeader("Content-Type", "application/json")
+			.json(error.message);
+	}
+};
+
+
+exports.getOrderByShopId = async (req, res) => {
+	try {
+		let orders = await orderModel.find({ shopId: req.params.shopId });
 		res.status(200).setHeader("Content-Type", "application/json").json(orders);
 	} catch (error) {
 		res
@@ -20,6 +45,7 @@ exports.addOrder = async (req, res) => {
 		billingId: req.body.billingId,
 		shippingId: req.body.shippingId,
 		productIds: req.body.productIds,
+      shopId: req.body.shopId,
 		subTotal: req.body.subTotal,
 		tax: req.body.tax,
 		shippingFee: req.body.shippingFee,
@@ -75,11 +101,8 @@ exports.getOrderById = async (req, res) => {
 
 exports.deleteProductById = async (req, res) => {
 	try {
-		await orderModel.findByIdAndDelete(req.params.orderId);
-		res
-			.status(200)
-			.setHeader("Content-Type", "application/json")
-			.json("Deleted successfully");
+		let deleted = await orderModel.findByIdAndDelete(req.params.orderId);
+		res.status(200).setHeader("Content-Type", "application/json").json(deleted);
 	} catch (e) {
 		res
 			.status(422)

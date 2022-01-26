@@ -15,6 +15,19 @@ exports.addAddress = async (req, res) => {
 	}
 };
 
+exports.getAddressByUserId = async (req, res) => {
+	try {
+		let Addresses = await addressModel.find({userId: req.params.userId});
+		res.status(200).setHeader("Content-Type", "application/json").json(Addresses);
+	} catch (error) {
+		res
+			.status(422)
+			.setHeader("Content-Type", "application/json")
+			.json(error.message);
+	}
+};
+
+
 exports.updateAddressById = async (req, res) => {
 	try {
 		let updatedAddress = await addressModel.findByIdAndUpdate(

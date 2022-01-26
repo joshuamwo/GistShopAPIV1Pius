@@ -10,4 +10,7 @@ billingRouter
 	.put(billingController.updateBillingById)
 	.delete(billingController.deleteBillingById);
 
+billingRouter
+	.route("/all/:userId")
+	.get(billingController.getBillingByUserId);
 module.exports = billingRouter;

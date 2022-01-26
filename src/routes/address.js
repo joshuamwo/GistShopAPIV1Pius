@@ -9,5 +9,7 @@ addressRouter
 	.get(addressController.getAddressById)
 	.put(addressController.updateAddressById)
 	.delete(addressController.deleteAddressById);
-
+   
+addressRouter.route("/all/:userId")
+   .get(addressController.getAddressByUserId);
 module.exports = addressRouter;

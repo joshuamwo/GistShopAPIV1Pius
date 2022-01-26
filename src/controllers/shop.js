@@ -1,6 +1,7 @@
 const shopModel = require("../models/shopSchema");
 var mongoose = require("mongoose");
 
+
 exports.getAllShopsByUserId = async (req, res) => {
 	try {
 		let shops = await shopModel.find({ userId: req.params.userId });
@@ -23,6 +24,7 @@ exports.createShop = async (req, res) => {
 		description: req.body.description,
 		userId: mongoose.mongo.ObjectId(req.params.userId),
 	};
+   shopModel.populate("users")
 
 	try {
 		let brandNew = await shopModel.create(newShop);
@@ -31,11 +33,8 @@ exports.createShop = async (req, res) => {
 			.setHeader("Content-Type", "application/json")
 			.json(brandNew);
 	} catch (error) {
-		res.status(422).setHeader("Content-Type", "application/json");
-		if (error.code == 11000) res.json("Please pick another name");
-		else {
-			res.json(error.message);
-		}
+		res.status(422).setHeader("Content-Type", "application/json").json(error);
+
 	}
 };
 

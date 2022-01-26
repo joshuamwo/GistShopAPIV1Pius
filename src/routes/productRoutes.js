@@ -25,4 +25,7 @@ productRouter
 	.put(upload.any("image"), productController.updateProductById)
 	.delete(productController.deleteProductById);
 
+productRouter.route("/get/all/:userId")
+   .get(productController.getAllProductsByUserId);
+
 module.exports = productRouter;

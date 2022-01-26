@@ -16,6 +16,21 @@ exports.getAllProductsByShopId = async (req, res) => {
 	}
 };
 
+exports.getAllProductsByUserId = async (req, res) => {
+	try {
+		let products = await productModel.find({ ownerId: req.params.userId });
+		res
+			.status(200)
+			.setHeader("Content-Type", "application/json")
+			.json(products);
+	} catch (error) {
+		res
+			.status(422)
+			.setHeader("Content-Type", "application/json")
+			.json(error.message);
+	}
+};
+
 exports.addProductToShop = async (req, res) => {
 	let images = [];
 	req?.files?.forEach((pic) => images.push(pic.originalname));
@@ -25,6 +40,7 @@ exports.addProductToShop = async (req, res) => {
 		quantity: req.body.quantity,
 		images: images,
 		shopId: mongoose.mongo.ObjectId(req.params.shopId),
+      ownerId: req.body.ownerId
 	};
 
 	try {

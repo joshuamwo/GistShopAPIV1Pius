@@ -15,6 +15,10 @@ const billingSchema = new Schema(
 		},
 		street: value,
 		zipCode: value,
+      userId: { 
+         type: Schema.Types.ObjectId,
+         required: true
+      }
 	},
 	{ timestamps: true, autoIndex: true, autoCreate: true }
 );

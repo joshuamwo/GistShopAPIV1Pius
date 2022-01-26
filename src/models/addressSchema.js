@@ -11,6 +11,10 @@ const addressSchema = new Schema(
 		name: value,
 		street: value,
 		zipCode: value,
+		userId: {
+			type: Schema.Types.ObjectId,
+			required: true,
+		},
 	},
 	{ timestamps: true, autoIndex: true, autoCreate: true }
 );

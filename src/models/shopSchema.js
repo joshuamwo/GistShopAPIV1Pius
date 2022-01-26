@@ -39,8 +39,8 @@ const shopSchema = new Schema(
 		},
 		description: value,
 		userId: {
-			type: mongoose.Types.ObjectId,
-			required: true,
+			type: Schema.Types.ObjectId,
+			ref: "user"
 		},
 	},
 	{ timestamps: true, autoCreate: true, autoIndex: true }

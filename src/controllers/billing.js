@@ -8,13 +8,26 @@ exports.addBilling = async (req, res) => {
 			.setHeader("Content-Type", "application/json")
 			.json(newBilling);
 	} catch (error) {
-		res.status(422).setHeader("Content-Type", "application/json");
-		if (error.code === 11000) res.json("Please pick a different name");
-		else {
-			res.json(error.message);
-		}
+		res.status(422).setHeader("Content-Type", "application/json").json(error)
 	}
 };
+
+
+exports.getBillingByUserId = async (req, res) => {
+	try {
+		let billings = await billingModel.find({ userId: req.params.userId });
+		res
+			.status(200)
+			.setHeader("Content-Type", "application/json")
+			.json(billings);
+	} catch (error) {
+		res
+			.status(422)
+			.setHeader("Content-Type", "application/json")
+			.json(error.message);
+	}
+};
+
 
 exports.updateBillingById = async (req, res) => {
 	try {

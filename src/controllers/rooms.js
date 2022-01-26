@@ -10,6 +10,7 @@ exports.createRoom = async (req, res) => {
 		raisedHands: req.body.raisedHands,
 		speakerIds: req.body.speakerIds,
 		invitedIds: req.body.invitedIds,
+      shopId: req.body.shopId
 	};
 	try {
 		let newRoom = await roomsModel.create(newObj);
@@ -21,6 +22,30 @@ exports.createRoom = async (req, res) => {
 			.json(error.message);
 	}
 };
+
+exports.getRoomsByUserId = async (req, res) => {
+	try {
+		let rooms = await roomsModel.find({ownerId: req.params.userId});
+		res.status(200).setHeader("Content-Type", "application/json").json(rooms);
+	} catch (error) {
+		res
+			.status(422)
+			.setHeader("Content-Type", "application/json")
+			.json(error.message);
+	}
+};
+exports.getRoomsByShopId = async (req, res) => {
+	try {
+		let rooms = await roomsModel.find({shopId: req.params.shopId});
+		res.status(200).setHeader("Content-Type", "application/json").json(rooms);
+	} catch (error) {
+		res
+			.status(422)
+			.setHeader("Content-Type", "application/json")
+			.json(error.message);
+	}
+};
+
 
 exports.updateRoomById = async (req, res) => {
 	let { title,...arrays } = req.body;

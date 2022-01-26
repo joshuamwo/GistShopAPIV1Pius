@@ -60,15 +60,7 @@ exports.addUser = (req, res) => {
         res.json(newUser);
       },
       (err) => {
-        if (err.code === 11000) {
-          res.statusCode = 400;
-          res.setHeader("Content-Type", "application/json");
-          res.json(`${req.body.firstName} already exists`);
-        } else {
-          res.statusCode = 422;
-          res.setHeader("Content-Type", "application/json");
-          res.json(err.errors);
-        }
+          res.status(422).setHeader("Content-Type", "application/json").json(err);   
       }
     )
     .catch((e) => {

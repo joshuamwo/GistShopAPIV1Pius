@@ -10,4 +10,8 @@ roomRouter
 	.put(roomController.updateRoomById)
 	.delete(roomController.deleteRoomById);
 
+roomRouter.route("/get/all/:userId").get(roomController.getRoomsByUserId);
+
+roomRouter.route("/get/all/shops/:shopId").get(roomController.getRoomsByShopId);
+
 module.exports = roomRouter;

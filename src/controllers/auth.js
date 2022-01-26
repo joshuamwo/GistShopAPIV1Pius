@@ -21,14 +21,9 @@ exports.register = async (req, res, next) => {
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")
-			.json({token});
+			.json({ token });
 	} catch (error) {
-		res.status(422).setHeader("Content-Type", "application/json");
-		if (error.code === 11000) res.json("This user already exists");
-		else {
-			const { errors } = error;
-			res.json(errors);
-		}
+		res.status(422).setHeader("Content-Type", "application/json").json(error);
 	}
 };
 
@@ -50,12 +45,11 @@ exports.userLogin = (req, res, next) => {
 			} else if (user && !error) {
 				const email = req.body.email;
 				const token = jwt.sign({ email }, process.env.secret_key);
-				res.json({ token, email});
+				res.json({ token, email });
 			}
 		});
 	})(req, res, next);
 };
-
 
 exports.logout = (req, res) => {
 	if (req.session) {
