@@ -15,7 +15,8 @@ exports.addBilling = async (req, res) => {
 
 exports.getBillingByUserId = async (req, res) => {
 	try {
-		let billings = await billingModel.find({ userId: req.params.userId });
+		let billings = await billingModel.find({ userId: req.params.userId })
+      .populate("userId", ["firstName", "lastName"]);
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")

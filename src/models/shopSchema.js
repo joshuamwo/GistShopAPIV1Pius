@@ -6,8 +6,6 @@ const value = {
 	required: [true, "This field is required"],
 };
 
-
-
 const shopSchema = new Schema(
 	{
 		name: {
@@ -34,12 +32,15 @@ const shopSchema = new Schema(
 		},
 		image: {
 			type: String,
-			required:  "Image photo is required",
+         default: function(){
+          return this._id+".png"
+         }
 		},
 		description: value,
 		userId: {
 			type: Schema.Types.ObjectId,
-			ref: "user"
+			ref: "user",
+         required: true
 		},
 	},
 	{ timestamps: true, autoCreate: true, autoIndex: true }

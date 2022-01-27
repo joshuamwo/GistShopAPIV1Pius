@@ -1,16 +1,18 @@
 const roomsModel = require("../models/roomSchema");
+var mongoose = require("mongoose");
+const arrayToObjectIds = require("../shared/arrayToObjectIds")
 
 exports.createRoom = async (req, res) => {
 	let newObj = {
-		ownerId: req.params.userId,
-		productIds: req.body.productIds,
-		hostIds: req.body.hostIds,
-		userIds: req.body.userIds,
+		ownerId: mongoose.Types.ObjectId(req.params.userId),
+		productIds: arrayToObjectIds(req.body.productIds),
+		hostIds: arrayToObjectIds(req.body.hostIds),
+		userIds: arrayToObjectIds(req.body.userIds),
 		title: req.body.title,
-		raisedHands: req.body.raisedHands,
-		speakerIds: req.body.speakerIds,
-		invitedIds: req.body.invitedIds,
-      shopId: req.body.shopId
+		raisedHands: arrayToObjectIds(req.body.raisedHands),
+		speakerIds: arrayToObjectIds(req.body.speakerIds),
+		invitedIds: arrayToObjectIds(req.body.invitedIds),
+		shopId: mongoose.Types.ObjectId(req.body.shopId),
 	};
 	try {
 		let newRoom = await roomsModel.create(newObj);
@@ -25,7 +27,9 @@ exports.createRoom = async (req, res) => {
 
 exports.getRoomsByUserId = async (req, res) => {
 	try {
-		let rooms = await roomsModel.find({ownerId: req.params.userId});
+		let rooms = await roomsModel
+			.find({ ownerId: req.params.userId })
+			.populate("hostIds", ["firstName", "lastName"]);
 		res.status(200).setHeader("Content-Type", "application/json").json(rooms);
 	} catch (error) {
 		res
@@ -36,7 +40,7 @@ exports.getRoomsByUserId = async (req, res) => {
 };
 exports.getRoomsByShopId = async (req, res) => {
 	try {
-		let rooms = await roomsModel.find({shopId: req.params.shopId});
+		let rooms = await roomsModel.find({ shopId: req.params.shopId }).populate("shopId");
 		res.status(200).setHeader("Content-Type", "application/json").json(rooms);
 	} catch (error) {
 		res
@@ -46,17 +50,16 @@ exports.getRoomsByShopId = async (req, res) => {
 	}
 };
 
-
 exports.updateRoomById = async (req, res) => {
-	let { title,...arrays } = req.body;
+	let { title, ...arrays } = req.body;
 	try {
 		let updatedRoom = await roomsModel.findByIdAndUpdate(
 			req.params.roomId,
 			{
 				$push: arrays,
-				$set: {title},
+				$set: { title },
 			},
-			{ runValidators: true, new: true,upsert: false }
+			{ runValidators: true, new: true, upsert: false }
 		);
 		res
 			.status(200)

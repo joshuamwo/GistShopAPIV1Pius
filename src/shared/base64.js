@@ -1,14 +1,9 @@
-const fs = require("fs");
+const fs = require('fs');
 
-exports.decode = (img) => {
-	// let base64Image = img.split(";base64,").pop();
-	let file = fs.writeFile(
-		"image.png",
-		img,
-		{ encoding: "base64" },
-		function (err) {
-			console.log("File created");
-		}
-	);
-	return file;
-};
+const decode = (img) =>{
+   const split = img.split(","); // or whatever is appropriate here. this will work for the example given
+	const base64Data = split[1];
+   fs.writeFileSync("./public/img/new.png", base64Data, "base64");
+}
+
+module.exports = decode;

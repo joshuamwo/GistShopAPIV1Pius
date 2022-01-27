@@ -1,10 +1,10 @@
 const shopModel = require("../models/shopSchema");
 var mongoose = require("mongoose");
-
+const base64Decode = require("../shared/base64");
 
 exports.getAllShopsByUserId = async (req, res) => {
 	try {
-		let shops = await shopModel.find({ userId: req.params.userId });
+		let shops = await shopModel.find({ userId: req.params.userId }).populate("userId");
 		res.status(200).setHeader("Content-Type", "application/json").json(shops);
 	} catch (error) {
 		res
@@ -20,27 +20,26 @@ exports.createShop = async (req, res) => {
 		email: req.body.email,
 		location: req.body.location,
 		phoneNumber: req.body.phoneNumber,
-		image: req?.file?.originalname,
+
 		description: req.body.description,
 		userId: mongoose.mongo.ObjectId(req.params.userId),
 	};
-   shopModel.populate("users")
-
+	
 	try {
 		let brandNew = await shopModel.create(newShop);
+      base64Decode(req.body.image);
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")
 			.json(brandNew);
 	} catch (error) {
 		res.status(422).setHeader("Content-Type", "application/json").json(error);
-
 	}
 };
 
 exports.getShopById = async (req, res) => {
 	try {
-		let shop = await shopModel.findById(req.params.shopId);
+		let shop = await shopModel.findById(req.params.shopId).populate("userId");
 		res.status(200).setHeader("Content-Type", "application/json").json(shop);
 	} catch (error) {
 		res

@@ -9,40 +9,41 @@ const value = {
 const roomSchema = new Schema(
 	{
 		ownerId: {
-			type: String,
+			type: Schema.Types.ObjectId,
 			required: true,
 			unique: true,
 		},
 		productIds: [
 			{
-				type: String,
+				type: Schema.Types.ObjectId,
 			},
 		],
 		hostIds: [
 			{
-				type: String,
+				type: Schema.Types.ObjectId,
+            ref: "user"
 			},
 		],
 
 		userIds: [
 			{
-				type: String,
+				type: Schema.Types.ObjectId,
 			},
 		],
 		title: value,
 		raisedHands: [
 			{
-				type: String,
+				type: Schema.Types.ObjectId,
 			},
 		],
 		speakerIds: [
 			{
-				type: String,
+				type: Schema.Types.ObjectId,
 			},
 		],
 		invitedIds: [
 			{
-				type: String,
+				type: Schema.Types.ObjectId,
 			},
 		],
 		status: {
@@ -51,6 +52,7 @@ const roomSchema = new Schema(
 		},
 		shopId: {
 			type: Schema.Types.ObjectId,
+         ref: "shop",
 			required: true,
 		},
 	},

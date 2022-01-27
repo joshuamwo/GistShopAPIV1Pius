@@ -6,7 +6,7 @@ const shopRouter = require("./shopRoutes");
 const productRouter = require("./productRoutes");
 const billingRouter = require("./billing");
 const addressRouter = require("./address");
-const roomRouter = require("./rooms");
+const roomRouter = require("./roomRoutes");
 
 const passport = require("passport");
 

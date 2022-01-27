@@ -17,7 +17,8 @@ const billingSchema = new Schema(
 		zipCode: value,
       userId: { 
          type: Schema.Types.ObjectId,
-         required: true
+         ref: "user",
+         required: true,
       }
 	},
 	{ timestamps: true, autoIndex: true, autoCreate: true }
