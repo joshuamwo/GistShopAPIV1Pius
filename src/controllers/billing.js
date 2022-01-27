@@ -15,8 +15,15 @@ exports.addBilling = async (req, res) => {
 
 exports.getBillingByUserId = async (req, res) => {
 	try {
-		let billings = await billingModel.find({ userId: req.params.userId })
-      .populate("userId", ["firstName", "lastName"]);
+		let billings = await billingModel
+			.find({ userId: req.params.userId })
+			.populate("userId", [
+				"firstName",
+				"lastName",
+				"bio",
+				"userName",
+				"email",
+			]);
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")
@@ -51,7 +58,15 @@ exports.updateBillingById = async (req, res) => {
 
 exports.getBillingById = async (req, res) => {
 	try {
-		let billing = await billingModel.findById(req.params.billingId);
+		let billing = await billingModel
+			.findById(req.params.billingId)
+			.populate("userId", [
+				"firstName",
+				"lastName",
+				"bio",
+				"userName",
+				"email",
+			]);
 		res.status(200).setHeader("Content-Type", "application/json").json(billing);
 	} catch (error) {
 		res

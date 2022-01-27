@@ -1,10 +1,18 @@
 const shopModel = require("../models/shopSchema");
 var mongoose = require("mongoose");
-const base64Decode = require("../shared/base64");
+const decode = require("../shared/base64");
 
 exports.getAllShopsByUserId = async (req, res) => {
 	try {
-		let shops = await shopModel.find({ userId: req.params.userId }).populate("userId");
+		let shops = await shopModel
+			.find({ userId: req.params.userId })
+			.populate("userId", [
+				"firstName",
+				"lastName",
+				"bio",
+				"userName",
+				"email",
+			]);
 		res.status(200).setHeader("Content-Type", "application/json").json(shops);
 	} catch (error) {
 		res
@@ -20,26 +28,36 @@ exports.createShop = async (req, res) => {
 		email: req.body.email,
 		location: req.body.location,
 		phoneNumber: req.body.phoneNumber,
-
+		image: req.body.image,
 		description: req.body.description,
 		userId: mongoose.mongo.ObjectId(req.params.userId),
 	};
-	
+
 	try {
 		let brandNew = await shopModel.create(newShop);
-      base64Decode(req.body.image);
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")
 			.json(brandNew);
 	} catch (error) {
-		res.status(422).setHeader("Content-Type", "application/json").json(error);
+		res
+			.status(422)
+			.setHeader("Content-Type", "application/json")
+			.json(error.message);
 	}
 };
 
 exports.getShopById = async (req, res) => {
 	try {
-		let shop = await shopModel.findById(req.params.shopId).populate("userId");
+		let shop = await shopModel
+			.findById(req.params.shopId)
+			.populate("userId", [
+				"firstName",
+				"lastName",
+				"bio",
+				"userName",
+				"email",
+			]);
 		res.status(200).setHeader("Content-Type", "application/json").json(shop);
 	} catch (error) {
 		res
@@ -49,12 +67,13 @@ exports.getShopById = async (req, res) => {
 	}
 };
 
+//keep the image name consistent through all updates and remember to  save in the files
 exports.updateShopById = async (req, res) => {
 	let newObj = req.body;
 	try {
 		let updatedShop = await shopModel.findByIdAndUpdate(
 			req.params.shopId,
-			{ $set: newObj },
+			newObj,
 			{ runValidators: true, new: true }
 		);
 
@@ -73,10 +92,7 @@ exports.updateShopById = async (req, res) => {
 exports.deleteShopById = async (req, res) => {
 	try {
 		let del = await shopModel.findByIdAndDelete(req.params.shopId);
-		res
-			.status(200)
-			.setHeader("Content-Type", "application/json")
-			.json(del);
+		res.status(200).setHeader("Content-Type", "application/json").json(del);
 	} catch (error) {
 		res
 			.status(422)

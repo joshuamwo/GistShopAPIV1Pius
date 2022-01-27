@@ -29,7 +29,13 @@ exports.getRoomsByUserId = async (req, res) => {
 	try {
 		let rooms = await roomsModel
 			.find({ ownerId: req.params.userId })
-			.populate("hostIds", ["firstName", "lastName"]);
+			.populate("hostIds", [
+				"firstName",
+				"lastName",
+				"bio",
+				"userName",
+				"email",
+			]);
 		res.status(200).setHeader("Content-Type", "application/json").json(rooms);
 	} catch (error) {
 		res

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
+const decode = require("../shared/base64");
 
 const value = {
 	type: String,
@@ -32,19 +33,39 @@ const shopSchema = new Schema(
 		},
 		image: {
 			type: String,
-         default: function(){
-          return this._id+".png"
-         }
+			required: true,
 		},
 		description: value,
 		userId: {
 			type: Schema.Types.ObjectId,
 			ref: "user",
-         required: true
+			required: true,
 		},
 	},
 	{ timestamps: true, autoCreate: true, autoIndex: true }
 );
+
+shopSchema.pre("save", function (next) {
+	//store in folder
+	decode(this.image, this._id);
+	const shop = this;
+	const image = `${shop._id}.png`;
+
+	this.image = image;
+	next();
+});
+
+
+shopSchema.pre("findOneAndUpdate", function (next) {
+	const shop = this;
+   if(this._update.image){
+      decode(this._update.image, this._conditions._id);
+      const image = `${this._conditions._id}.png`;
+      this._update.image = image;
+   }
+	console.log(this._update);
+	next();
+});
 
 const shops = model("shop", shopSchema);
 

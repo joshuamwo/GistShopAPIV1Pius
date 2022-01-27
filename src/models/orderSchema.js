@@ -3,21 +3,29 @@ const { Schema, model } = mongoose;
 
 const orderSchema = new Schema(
 	{
-		customerId: { type: mongoose.Types.ObjectId, required: true },
-		billingId: { type: mongoose.Types.ObjectId, required: true },
-		shippingId: { type: mongoose.Types.ObjectId, required: true },
-		productIds: [{ type: mongoose.Types.ObjectId }],
+		customerId: { type: Schema.Types.ObjectId, required: true, ref: "user" },
+		billingId: {
+			type: Schema.Types.ObjectId,
+			required: true,
+			ref: "billing",
+		},
+		shippingId: {
+			type: Schema.Types.ObjectId,
+			required: true,
+			ref: "address",
+		},
+		productIds: [{ type: Schema.Types.ObjectId,ref: "product" }],
 		status: {
 			type: String,
 			enum: ["pending", "cancelled", "shipped", "delivered"],
-         default: "pending"
+			default: "pending",
 		},
-      shopId: {
-         type: Schema.Types.ObjectId,
-         required: true
-      },
+		shopId: {
+			type: Schema.Types.ObjectId,
+			required: true,
+		},
 
-		subTotal: { type:Number, required: true },
+		subTotal: { type: Number, required: true },
 		tax: { type: Number, required: true },
 		shippingFee: { type: Number, required: true },
 		totalCost: {
@@ -31,12 +39,6 @@ const orderSchema = new Schema(
 		timestamps: true,
 		autoIndex: true,
 		autoCreate: true,
-		toObject: {
-			virtuals: true,
-		},
-		toJSON: {
-			virtuals: true,
-		},
 	}
 );
 

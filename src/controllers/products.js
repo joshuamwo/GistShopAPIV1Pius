@@ -1,5 +1,6 @@
 var mongoose = require("mongoose");
 var productModel = require("../models/productSchema");
+var decode = require("../shared/base64");
 
 exports.getAllProductsByShopId = async (req, res) => {
 	try {
@@ -32,13 +33,11 @@ exports.getAllProductsByUserId = async (req, res) => {
 };
 
 exports.addProductToShop = async (req, res) => {
-	let images = [];
-	req?.files?.forEach((pic) => images.push(pic.originalname));
 	const newProduct = {
 		name: req.body.name,
 		price: req.body.price,
 		quantity: req.body.quantity,
-		images: images,
+		images: req.body.images,
 		shopId: mongoose.mongo.ObjectId(req.params.shopId),
       ownerId: req.body.ownerId
 	};
@@ -67,13 +66,11 @@ exports.getProductById = async (req, res) => {
 };
 
 exports.updateProductById = async (req, res) => {
-	let newImages = [];
-	req.files.forEach((pic) => newImages.push(pic.originalname));
 	let newObj = req.body;
 	try {
 		let newProduct = await productModel.findByIdAndUpdate(
 			req.params.productId,
-			{ $push: { images: newImages }, $set: newObj },
+			 newObj ,
 			{ runValidators: true, new: true }
 		);
 		res

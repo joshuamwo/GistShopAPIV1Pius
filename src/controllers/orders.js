@@ -2,9 +2,17 @@ var orderModel = require("../models/orderSchema");
 
 exports.getAllOrdersByUserId = async (req, res) => {
 	try {
-		let orders = await orderModel.find({
-			customerId: req.params.userId,
-		});
+		let orders = await orderModel
+			.find({
+				customerId: req.params.userId,
+			})
+			.populate("customerId", [
+				"firstName",
+				"lastName",
+				"bio",
+				"userName",
+				"email",
+			]);
 		res.status(200).setHeader("Content-Type", "application/json").json(orders);
 	} catch (error) {
 		res
@@ -16,7 +24,8 @@ exports.getAllOrdersByUserId = async (req, res) => {
 
 exports.getOrderByProductId = async (req, res) => {
 	try {
-		let orders = await orderModel.find({ productIds: req.params.productId });
+		let orders = await orderModel.find({ productIds: req.params.productId })
+         .populate("productIds");
 		res.status(200).setHeader("Content-Type", "application/json").json(orders);
 	} catch (error) {
 		res
@@ -25,7 +34,6 @@ exports.getOrderByProductId = async (req, res) => {
 			.json(error.message);
 	}
 };
-
 
 exports.getOrderByShopId = async (req, res) => {
 	try {
@@ -45,7 +53,7 @@ exports.addOrder = async (req, res) => {
 		billingId: req.body.billingId,
 		shippingId: req.body.shippingId,
 		productIds: req.body.productIds,
-      shopId: req.body.shopId,
+		shopId: req.body.shopId,
 		subTotal: req.body.subTotal,
 		tax: req.body.tax,
 		shippingFee: req.body.shippingFee,
@@ -74,7 +82,7 @@ exports.updateOrderById = async (req, res) => {
 			req.params.orderId,
 			{ $push: { productIds: productIds }, $set: setter },
 			{ runValidators: true, new: true }
-		);
+      );
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")
@@ -89,8 +97,16 @@ exports.updateOrderById = async (req, res) => {
 
 exports.getOrderById = async (req, res) => {
 	try {
-		let order = await orderModel.findById(req.params.orderId);
-		res.status(200).setHeader("Content-Type", "application/json").json(order);
+		let order = await orderModel
+			.findById(req.params.orderId)
+			.populate("billingId")
+			.populate("shippingId")
+			.populate("productIds");;
+		res
+			.status(200)
+			.setHeader("Content-Type", "application/json")
+			.json(order);
+		
 	} catch (error) {
 		res
 			.status(422)
