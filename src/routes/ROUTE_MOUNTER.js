@@ -7,6 +7,7 @@ const productRouter = require("./productRoutes");
 const billingRouter = require("./billing");
 const addressRouter = require("./address");
 const roomRouter = require("./roomRoutes");
+const transRouter = require("./transactions");
 
 const passport = require("passport");
 
@@ -22,3 +23,4 @@ app.use("/products", passport.authenticate("jwt", { session: false }), productRo
 app.use("/address", passport.authenticate("jwt", { session: false }), addressRouter);
 app.use("/billing", passport.authenticate("jwt", { session: false }), billingRouter);
 app.use("/rooms", passport.authenticate("jwt", { session: false }), roomRouter);
+app.use("/transactions", passport.authenticate("jwt", { session: false }), transRouter);

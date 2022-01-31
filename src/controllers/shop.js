@@ -1,6 +1,5 @@
 const shopModel = require("../models/shopSchema");
 var mongoose = require("mongoose");
-const decode = require("../shared/base64");
 
 exports.getAllShopsByUserId = async (req, res) => {
 	try {
