@@ -6,7 +6,6 @@ decode = (imgs, id) => {
 		imgs.forEach((img) => {
 			const split = img.split(",");
 			const base64Data = split[1];
-         console.log(base64Data);
 			let index = imgs.indexOf(img);
 			fs.writeFileSync("./public/img/" + index + "_" + id + ".png",base64Data,"base64");
 		});

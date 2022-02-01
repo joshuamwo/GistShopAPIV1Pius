@@ -2,10 +2,17 @@ const express = require("express");
 const shopRouter = express.Router();
 const shopController = require("../controllers/shop");
 
+const passport = require("passport");
+
+require("../services/authenticate");
+
+
 
 const multer = require("multer");
 
 const storage = multer.memoryStorage();
+
+
 
 const fileFilter = (req, file, cb) => {
 	const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
@@ -14,18 +21,31 @@ const fileFilter = (req, file, cb) => {
 
 let upload = multer({ storage, fileFilter });
 
+shopRouter.route("/").get(shopController.getAllShops);
+
 shopRouter
 	.route("/:userId")
-   .get(shopController.getAllShopsByUserId)
-	.post(upload.single("image"), shopController.createShop);
+	.get(
+		passport.authenticate("jwt", { session: false }),
+		shopController.getAllShopsByUserId
+	)
+	.post(
+		upload.single("image"),
+		passport.authenticate("jwt", { session: false }),
+		shopController.createShop
+	);
 
-   
 shopRouter
 	.route("/:userId/:shopId")
 	.get(shopController.getShopById)
-	.put(upload.single("image"), shopController.updateShopById)
-	.delete(shopController.deleteShopById)
-
-
+	.put(
+		upload.single("image"),
+		passport.authenticate("jwt", { session: false }),
+		shopController.updateShopById
+	)
+	.delete(
+		passport.authenticate("jwt", { session: false }),
+		shopController.deleteShopById
+	);
 
 module.exports = shopRouter;

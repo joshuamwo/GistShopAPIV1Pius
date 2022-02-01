@@ -12,20 +12,41 @@ const fileFilter = (req, file, cb) => {
 };
 
 let upload = multer({ storage, fileFilter });
+const passport = require("passport");
+
+require("../services/authenticate");
+
+productRouter.route("/")
+   .get(productController.getAllProducts);
 
 
 productRouter
 	.route("/:shopId")
 	.get(productController.getAllProductsByShopId)
-	.post(upload.any("image"), productController.addProductToShop);
+	.post(
+		passport.authenticate("jwt", { session: false }),
+		upload.any("image"),
+		productController.addProductToShop
+	);
 
 productRouter
-	.route("/:shopId/:productId")
+	.route("/products/:productId")
 	.get(productController.getProductById)
-	.put(upload.any("image"), productController.updateProductById)
-	.delete(productController.deleteProductById);
+	.put(
+		passport.authenticate("jwt", { session: false }),
+		upload.any("image"),
+		productController.updateProductById
+	)
+	.delete(
+		passport.authenticate("jwt", { session: false }),
+		productController.deleteProductById
+	);
 
-productRouter.route("/get/all/:userId")
-   .get(productController.getAllProductsByUserId);
+productRouter
+	.route("/get/all/:userId")
+	.get(
+		passport.authenticate("jwt", { session: false }),
+		productController.getAllProductsByUserId
+	);
 
 module.exports = productRouter;

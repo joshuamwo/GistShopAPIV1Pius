@@ -63,7 +63,6 @@ shopSchema.pre("findOneAndUpdate", function (next) {
       const image = `${this._conditions._id}.png`;
       this._update.image = image;
    }
-	console.log(this._update);
 	next();
 });
 

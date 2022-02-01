@@ -1,6 +1,18 @@
 const shopModel = require("../models/shopSchema");
 var mongoose = require("mongoose");
 
+exports.getAllShops = async (req, res) => {
+	try {
+		let shops = await shopModel.find();
+		res.status(200).setHeader("Content-Type", "application/json").json(shops);
+	} catch (error) {
+		res
+			.status(422)
+			.setHeader("Content-Type", "application/json")
+			.json(error.message);
+	}
+};
+
 exports.getAllShopsByUserId = async (req, res) => {
 	try {
 		let shops = await shopModel

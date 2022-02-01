@@ -1,9 +1,25 @@
 var mongoose = require("mongoose");
 var productModel = require("../models/productSchema");
 
+exports.getAllProducts = async (req, res) => {
+	try {
+		let products = await productModel.find();
+		res
+			.status(200)
+			.setHeader("Content-Type", "application/json")
+			.json(products);
+	} catch (error) {
+		res
+			.status(422)
+			.setHeader("Content-Type", "application/json")
+			.json(error.message);
+	}
+};
+
 exports.getAllProductsByShopId = async (req, res) => {
 	try {
-		let products = await productModel.find({ shopId: req.params.shopId });
+		let products = await productModel.find({ shopId: req.params.shopId })
+      .populate("shopId",["_id", "name", "email", "location","phoneNumber","description"]);
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")
@@ -38,7 +54,7 @@ exports.addProductToShop = async (req, res) => {
 		quantity: req.body.quantity,
 		images: req.body.images,
 		shopId: mongoose.mongo.ObjectId(req.params.shopId),
-      ownerId: req.body.ownerId
+		ownerId: req.body.ownerId,
 	};
 
 	try {
@@ -69,7 +85,7 @@ exports.updateProductById = async (req, res) => {
 	try {
 		let newProduct = await productModel.findByIdAndUpdate(
 			req.params.productId,
-			 newObj ,
+			newObj,
 			{ runValidators: true, new: true }
 		);
 		res

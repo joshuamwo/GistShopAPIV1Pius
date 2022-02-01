@@ -27,6 +27,7 @@ const productSchema = new Schema(
 		shopId: {
 			type: mongoose.Types.ObjectId,
 			required: true,
+         ref: "shop"
 		},
 		ownerId: {
 			type: Schema.Types.ObjectId,
