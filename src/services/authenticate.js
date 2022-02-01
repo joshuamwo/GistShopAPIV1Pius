@@ -26,7 +26,7 @@ passport.use(
 							.isValidPassword(password)
 							.then(
 								(validate) => {
-									if (validate) done(null, validate);
+									if (validate) done(null, validate, user);
 									else if (!validate)
 										done(null, false, { passErr: "Invalid password" });
 								},

@@ -43,9 +43,9 @@ exports.userLogin = (req, res, next) => {
 					.setHeader("Content-Type", "application/json")
 					.json(error.message);
 			} else if (user && !error) {
-				const email = req.body.email;
-				const token = jwt.sign({ email }, process.env.secret_key);
-				res.json({ token, email });
+				const token = jwt.sign( req.body.email , process.env.secret_key);
+            const { _id,firstName, lastName,email,userName,bio } = info
+				res.json({ token, _id,firstName,lastName,email,userName, bio });
 			}
 		});
 	})(req, res, next);
