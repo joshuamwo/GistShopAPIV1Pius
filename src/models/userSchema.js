@@ -8,15 +8,13 @@ const value = {
   required: [true, "This field is required"],
 };
 
-
 const imageSchema = new mongoose.Schema({
   data: {
     type: Buffer,
-    required: [true, "Profile photo is required"]
+    required: [true, "Profile photo is required"],
   },
   contentType: String,
-})
-
+});
 
 const userSchema = new Schema(
   {
@@ -24,6 +22,7 @@ const userSchema = new Schema(
     lastName: value,
     bio: value,
     userName: value,
+    phonenumber: value,
     email: {
       type: String,
       trim: true,
@@ -37,9 +36,9 @@ const userSchema = new Schema(
     },
     password: value,
     wallet: {
-       type: Number, 
-       min: 0
-    }
+      type: Number,
+      min: 0,
+    },
   },
   {
     timestamps: true,

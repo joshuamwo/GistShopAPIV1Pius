@@ -4,14 +4,12 @@ require("./src/services/authenticate");
 const connect = require("./src/services/dbConnect");
 const http = require("http");
 
-
 /*****************
  *SERVER INITILIZATIONS
  *****************/
 const app = express();
 
-
-app.set("port", process.env.PORT || 5000);
+app.set("port", process.env.PORT || 6000);
 /*****************
  *VIEW ENGINE CONFIG
  *****************/
@@ -29,7 +27,7 @@ app.use(require("./src/routes/ROUTE_MOUNTER"));
  *****************/
 var server = http.createServer(app);
 server.listen(app.get("port"), function () {
-	console.log("Express server listening on port " + app.get("port"));
+  console.log("Express server listening on port " + app.get("port"));
 });
 connect();
 
