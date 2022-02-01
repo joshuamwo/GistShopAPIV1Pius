@@ -4,9 +4,12 @@ const userModel = require("../models/userSchema");
 
 exports.getUserTransactionsByUserId = async (req, res) => {
 	try {
-		let transactions = await transactionModel.find({
-			$or: [{ from: req.params.userId }, { to: req.params.userId }],
-		});
+		let transactions = await transactionModel
+			.find({
+				$or: [{ from: req.params.userId }, { to: req.params.userId }],
+			})
+			.populate("from", ["firstName", "lastName", "bio", "userName", "email"])
+			.populate("to", ["firstName", "lastName", "bio", "userName", "email"])
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")
@@ -27,6 +30,7 @@ exports.createTransaction = async (req, res) => {
 		amount: req.body.amount,
 		type: req.body.type,
 		deducting: req.body.deducting,
+      shopId: req.body.shopId,
 	};
 	try {
 		if (newTransaction.type === "purchase") {
@@ -62,7 +66,7 @@ exports.getTransactionById = async (req, res) => {
 
 exports.getTransactionByShopId = async (req, res) => {
    	try {
-			let trans = await transactionModel.find({shopId: req.params.shopId});
+			let trans = await transactionModel.find({shopId: req.params.shopId}).populate("shopId");
 			res.status(200).setHeader("Content-Type", "application/json").json(trans);
 		} catch (error) {
 			res
