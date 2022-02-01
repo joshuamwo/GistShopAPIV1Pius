@@ -38,7 +38,6 @@ const userSchema = new Schema(
     password: value,
     wallet: {
        type: Number, 
-       required: true,
        min: 0
     }
   },
