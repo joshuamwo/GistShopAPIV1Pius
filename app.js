@@ -9,7 +9,7 @@ const http = require("http");
  *****************/
 const app = express();
 
-app.set("port", process.env.PORT || 6000);
+app.set("port", process.env.PORT || 5000);
 /*****************
  *VIEW ENGINE CONFIG
  *****************/

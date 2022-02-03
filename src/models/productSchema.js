@@ -32,6 +32,7 @@ const productSchema = new Schema(
 		ownerId: {
 			type: Schema.Types.ObjectId,
 			required: true,
+         ref: "user"
 		},
 	},
 	{ timestamps: true, autoIndex: true, autoCreate: true }

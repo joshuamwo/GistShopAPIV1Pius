@@ -3,7 +3,7 @@ var mongoose = require("mongoose");
 
 exports.getAllShops = async (req, res) => {
 	try {
-		let shops = await shopModel.find();
+		let shops = await shopModel.find().populate("userId", ["userName"]);
 		res.status(200).setHeader("Content-Type", "application/json").json(shops);
 	} catch (error) {
 		res
