@@ -51,10 +51,9 @@ exports.createShop = async (req, res) => {
 			.setHeader("Content-Type", "application/json")
 			.json(brandNew);
 	} catch (error) {
-		res
-			.status(422)
-			.setHeader("Content-Type", "application/json")
-			.json(error.message);
+		if (error.code === 11000) res.status(409);
+		else res.status(422);
+		res.setHeader("Content-Type", "application/json").json(error.message);
 	}
 };
 

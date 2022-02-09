@@ -16,7 +16,7 @@ require("../services/authenticate");
 module.exports = app = express();
 
 app.use("/", authRouter);
-app.use("/users", passport.authenticate("jwt", { session: false }), userRouter);
+app.use("/users", userRouter);
 app.use("/orders", passport.authenticate("jwt", { session: false }), orderRouter);
 app.use("/shop", shopRouter);
 app.use("/products", productRouter);

@@ -44,6 +44,21 @@ exports.getRoomsByUserId = async (req, res) => {
 			.json(error.message);
 	}
 };
+exports.getRoomsAllRooms = async (req, res) => {
+	try {
+		let rooms = await roomsModel.find();
+		res.status(200).setHeader("Content-Type", "application/json").json(rooms);
+	} catch (error) {
+		res
+			.status(422)
+			.setHeader("Content-Type", "application/json")
+			.json(error.message);
+	}
+};
+
+
+
+
 exports.getRoomsByShopId = async (req, res) => {
 	try {
 		let rooms = await roomsModel.find({ shopId: req.params.shopId }).populate("shopId");
@@ -81,7 +96,11 @@ exports.updateRoomById = async (req, res) => {
 
 exports.getRoomById = async (req, res) => {
 	try {
-		let room = await roomsModel.findById(req.params.roomId);
+		let room = await roomsModel
+			.findById(req.params.roomId)
+			.populate("productIds", ["images", "name", "price", "quantity"])
+			.populate("shopId", ["description", "image"])
+			.populate("ownerId", ["userName"]);
 		res.status(200).setHeader("Content-Type", "application/json").json(room);
 	} catch (error) {
 		res

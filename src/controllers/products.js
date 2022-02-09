@@ -3,8 +3,10 @@ var productModel = require("../models/productSchema");
 
 exports.getAllProducts = async (req, res) => {
 	try {
-		let products = await productModel.find()
-      .populate("ownerId", ["userName"]);
+		let products = await productModel
+			.find()
+			.populate("shopId", ["image"])
+			.populate("ownerId", ["userName"]);
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")
@@ -28,7 +30,9 @@ exports.getAllProductsByShopId = async (req, res) => {
 				"location",
 				"phoneNumber",
 				"description",
-			]);
+				"image",
+			])
+			.populate("ownerId", ["userName"]);
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")

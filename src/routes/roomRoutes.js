@@ -2,10 +2,12 @@ const express = require("express");
 const roomController = require("../controllers/rooms");
 const roomRouter = express.Router();
 
+roomRouter.route("/").get(roomController.getRoomsAllRooms);
+
 roomRouter.route("/:userId").post(roomController.createRoom);
 
 roomRouter
-	.route("/:userId/:roomId")
+	.route("/rooms/:roomId")
 	.get(roomController.getRoomById)
 	.put(roomController.updateRoomById)
 	.delete(roomController.deleteRoomById);

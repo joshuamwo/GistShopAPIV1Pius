@@ -1,4 +1,5 @@
 var orderModel = require("../models/orderSchema");
+const quantityModel = require("../models/quantitySchema");
 
 exports.getAllOrdersByUserId = async (req, res) => {
 	try {

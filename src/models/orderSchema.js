@@ -14,7 +14,11 @@ const orderSchema = new Schema(
 			required: true,
 			ref: "address",
 		},
-		productIds: [{ type: Schema.Types.ObjectId,ref: "product" }],
+		productIds: [{ type: Schema.Types.ObjectId, ref: "product" }],
+		// quantity: {
+		// 	type: Number,
+		// 	required: true,
+		// },
 		status: {
 			type: String,
 			enum: ["pending", "cancelled", "shipped", "delivered"],

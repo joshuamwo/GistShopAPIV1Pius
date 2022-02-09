@@ -36,7 +36,7 @@ shopRouter
 	);
 
 shopRouter
-	.route("/:userId/:shopId")
+	.route("/shop/:shopId")
 	.get(shopController.getShopById)
 	.put(
 		upload.single("image"),

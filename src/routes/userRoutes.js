@@ -2,6 +2,9 @@ const express = require("express");
 const userRouter = express.Router();
 const userController = require("../controllers/users");
 
+const passport = require("passport");
+
+require("../services/authenticate");
 
 const multer = require("multer");
 
@@ -16,14 +19,25 @@ let upload = multer({ storage, fileFilter });
 
 userRouter
 	.route(`/`)
-	.get(userController.getAllUsers)
+	.get(
+		passport.authenticate("jwt", { session: false }),
+		userController.getAllUsers
+	)
 	.post(upload.single("profilePicture"), userController.addUser);
 
 userRouter
 	.route("/:userId")
-	.get(userController.getUserById)
-	.put(upload.single("profilePicture"), userController.editUserById)
-	.delete(userController.deleteUserById)
-
+	.get(
+		passport.authenticate("jwt", { session: false }),
+		userController.getUserById
+	)
+	.put(
+		passport.authenticate("jwt", { session: false }),
+		userController.editUserById
+	)
+	.delete(
+		passport.authenticate("jwt", { session: false }),
+		userController.deleteUserById
+	);
 
 module.exports = userRouter;

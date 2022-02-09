@@ -11,7 +11,6 @@ const billingSchema = new Schema(
 		name: {
 			type: String,
 			required: true,
-			unique: true,
 		},
 		street: value,
 		zipCode: value,

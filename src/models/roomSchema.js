@@ -12,10 +12,13 @@ const roomSchema = new Schema(
 			type: Schema.Types.ObjectId,
 			required: true,
 			unique: true,
+         ref:"user"
 		},
 		productIds: [
 			{
 				type: Schema.Types.ObjectId,
+            required: true,
+            ref: "product"
 			},
 		],
 		hostIds: [
