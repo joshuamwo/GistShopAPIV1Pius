@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
 require("mongoose-currency").loadType(mongoose);
 const bcrypt = require("bcrypt");
+const decode = require("../shared/base64");
+
 
 const value = {
 	type: String,
@@ -52,6 +54,13 @@ userSchema.pre("save", async function (next) {
 	const user = this;
 	const hash = await bcrypt.hash(this.password, 10);
 	this.password = hash;
+   	decode(this.profilePhoto, this._id);
+		const image = `${user._id}.png`;
+
+		this.profilePhoto = image;
+		next();
+
+
 	next();
 });
 

@@ -47,7 +47,7 @@ exports.addUser = (req, res) => {
 		title: req.body.title,
 		email: req.body.email,
 		password: req.body.password,
-		profilePhoto: req.body.image,
+		profilePhoto: req.body.profilePhoto,
 	};
 
 	userModel

@@ -116,6 +116,7 @@ exports.getOrderById = async (req, res) => {
 	try {
 		let order = await orderModel
 			.findById(req.params.orderId)
+         .populate("itemId")
 			.populate("billingId")
 			.populate("shippingId")
 			.populate("productIds");
