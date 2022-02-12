@@ -1,5 +1,8 @@
 var orderModel = require("../models/orderSchema");
-const quantityModel = require("../models/quantitySchema");
+const mongoose = require("mongoose");
+const itemModel = require("../models/itemSchema");
+
+exports.getAllOrdersBySeller = async (req, res) => {};
 
 exports.getAllOrdersByUserId = async (req, res) => {
 	try {
@@ -25,8 +28,9 @@ exports.getAllOrdersByUserId = async (req, res) => {
 
 exports.getOrderByProductId = async (req, res) => {
 	try {
-		let orders = await orderModel.find({ productIds: req.params.productId })
-         .populate("productIds");
+		let orders = await orderModel
+			.find({ productIds: req.params.productId })
+			.populate("productIds");
 		res.status(200).setHeader("Content-Type", "application/json").json(orders);
 	} catch (error) {
 		res
@@ -49,24 +53,36 @@ exports.getOrderByShopId = async (req, res) => {
 };
 
 exports.addOrder = async (req, res) => {
-	let newObj = {
+	let orderId = new mongoose.Types.ObjectId();
+	let itemId = new mongoose.Types.ObjectId();
+
+	let order = {
+		_id: orderId,
 		customerId: req.params.userId,
 		billingId: req.body.billingId,
 		shippingId: req.body.shippingId,
-		productIds: req.body.productIds,
 		shopId: req.body.shopId,
 		subTotal: req.body.subTotal,
 		tax: req.body.tax,
 		shippingFee: req.body.shippingFee,
 		total: req.body.tax + req.body.shippingFee + req.body.subtotal,
+		itemId,
+	};
+
+	let item = {
+		_id: itemId,
+		productId: req.body.productId,
+		quantity: req.body.quantity,
+		orderId,
 	};
 
 	try {
-		let newOrder = await orderModel.create(newObj);
+		let newOrder = await orderModel.create(order);
+		let newItem = await itemModel.create(item);
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")
-			.json(newOrder);
+			.json({ newOrder, newItem });
 	} catch (e) {
 		res
 			.status(422)
@@ -81,9 +97,9 @@ exports.updateOrderById = async (req, res) => {
 	try {
 		let newOrder = await orderModel.findByIdAndUpdate(
 			req.params.orderId,
-			{ $push: { productIds: productIds }, $set: setter },
+			{ $set: req.body },
 			{ runValidators: true, new: true }
-      );
+		);
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")
@@ -102,12 +118,8 @@ exports.getOrderById = async (req, res) => {
 			.findById(req.params.orderId)
 			.populate("billingId")
 			.populate("shippingId")
-			.populate("productIds");;
-		res
-			.status(200)
-			.setHeader("Content-Type", "application/json")
-			.json(order);
-		
+			.populate("productIds");
+		res.status(200).setHeader("Content-Type", "application/json").json(order);
 	} catch (error) {
 		res
 			.status(422)

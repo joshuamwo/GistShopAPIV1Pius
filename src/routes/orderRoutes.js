@@ -2,12 +2,14 @@ const orderController = require("../controllers/orders");
 const express = require("express");
 const orderRouter = express.Router();
 
+
+
 orderRouter
 	.route("/:userId")
 	.get(orderController.getAllOrdersByUserId)
 	.post(orderController.addOrder);
 orderRouter
-	.route("/:userId/:orderId")
+	.route("/orders/:orderId")
 	.get(orderController.getOrderById)
 	.put(orderController.updateOrderById)
 	.delete(orderController.deleteProductById);

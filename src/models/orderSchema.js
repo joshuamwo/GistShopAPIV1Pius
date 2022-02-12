@@ -14,11 +14,6 @@ const orderSchema = new Schema(
 			required: true,
 			ref: "address",
 		},
-		productIds: [{ type: Schema.Types.ObjectId, ref: "product" }],
-		// quantity: {
-		// 	type: Number,
-		// 	required: true,
-		// },
 		status: {
 			type: String,
 			enum: ["pending", "cancelled", "shipped", "delivered"],
@@ -28,7 +23,11 @@ const orderSchema = new Schema(
 			type: Schema.Types.ObjectId,
 			required: true,
 		},
-
+		itemId: {
+			type: Schema.Types.ObjectId,
+			required: true,
+			ref: "item",
+		},
 		subTotal: { type: Number, required: true },
 		tax: { type: Number, required: true },
 		shippingFee: { type: Number, required: true },
@@ -46,6 +45,14 @@ const orderSchema = new Schema(
 	}
 );
 
+
+
 const orders = model("order", orderSchema);
+
+/*......................................
+   *pre hook that saves the objectId of the order Schema in the quantity schema
+   *
+   *
+   ......................................*/
 
 module.exports = orders;
