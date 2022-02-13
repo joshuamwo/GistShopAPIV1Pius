@@ -21,6 +21,7 @@ app.set("view engine", "jade");
  *****************/
 app.use(require("./src/services/middleware"));
 app.use(require("./src/routes/ROUTE_MOUNTER"));
+app.use("/public/img", express.static(path.join(__dirname, "public/img")));
 
 /*****************
  *SERVER INSTANTIATION
