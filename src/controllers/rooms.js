@@ -39,6 +39,43 @@ exports.getRoomsByUserId = async (req, res) => {
         "bio",
         "userName",
         "email",
+      ])
+      .populate("userIds", [
+        "firstName",
+        "lastName",
+        "bio",
+        "userName",
+        "email",
+      ])
+      .populate("raisedHands", [
+        "firstName",
+        "lastName",
+        "bio",
+        "userName",
+        "email",
+      ])
+      .populate("speakerIds", [
+        "firstName",
+        "lastName",
+        "bio",
+        "userName",
+        "email",
+      ])
+      .populate("invitedIds", [
+        "firstName",
+        "lastName",
+        "bio",
+        "userName",
+        "email",
+      ])
+      .populate("productIds", ["images", "name", "price", "quantity"])
+      .populate("shopId", ["description", "image"])
+      .populate("ownerId", [
+        "firstName",
+        "lastName",
+        "bio",
+        "userName",
+        "email",
       ]);
     res.status(200).setHeader("Content-Type", "application/json").json(rooms);
   } catch (error) {
