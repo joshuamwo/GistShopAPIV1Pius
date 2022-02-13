@@ -26,11 +26,9 @@ exports.register = async (req, res, next) => {
   try {
     let added = await userModel.create(newWorker);
     const token = jwt.sign(req.body.email, process.env.secret_key);
-    const { _id, firstName, lastName, email, userName, bio,profilePhoto } = added;
-    res
-      .status(200)
-      .setHeader("Content-Type", "application/json")
-      .json({ token, _id, firstName, lastName, email, userName, bio,profilePhoto });
+    const { _id, firstName, lastName, email, userName, bio, profilePhoto } =
+      added;
+    res.status(200).setHeader("Content-Type", "application/json").json(added);
   } catch (error) {
     res.status(422).setHeader("Content-Type", "application/json").json(error);
   }
@@ -53,8 +51,18 @@ exports.userLogin = (req, res, next) => {
           .json(error.message);
       } else if (user && !error) {
         const token = jwt.sign(req.body.email, process.env.secret_key);
-        const { _id, firstName, lastName, email, userName, bio,profilePhoto } = info;
-        res.json({ token, _id, firstName, lastName, email, userName, bio,profilePhoto });
+        const { _id, firstName, lastName, email, userName, bio, profilePhoto } =
+          info;
+        res.json({
+          token,
+          _id,
+          firstName,
+          lastName,
+          email,
+          userName,
+          bio,
+          profilePhoto,
+        });
       }
     });
   })(req, res, next);
