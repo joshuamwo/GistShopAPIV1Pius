@@ -77,6 +77,7 @@ exports.getRoomsByUserId = async (req, res) => {
         "userName",
         "email",
       ]);
+      
     res.status(200).setHeader("Content-Type", "application/json").json(rooms);
   } catch (error) {
     res
@@ -87,7 +88,51 @@ exports.getRoomsByUserId = async (req, res) => {
 };
 exports.getRoomsAllRooms = async (req, res) => {
   try {
-    let rooms = await roomsModel.find();
+    let rooms = await roomsModel.find()      
+    .populate("hostIds", [
+      "firstName",
+      "lastName",
+      "bio",
+      "userName",
+      "email",
+    ])
+    .populate("userIds", [
+      "firstName",
+      "lastName",
+      "bio",
+      "userName",
+      "email",
+    ])
+    .populate("raisedHands", [
+      "firstName",
+      "lastName",
+      "bio",
+      "userName",
+      "email",
+    ])
+    .populate("speakerIds", [
+      "firstName",
+      "lastName",
+      "bio",
+      "userName",
+      "email",
+    ])
+    .populate("invitedIds", [
+      "firstName",
+      "lastName",
+      "bio",
+      "userName",
+      "email",
+    ])
+    .populate("productIds", ["images", "name", "price", "quantity"])
+    .populate("shopId", ["description", "image"])
+    .populate("ownerId", [
+      "firstName",
+      "lastName",
+      "bio",
+      "userName",
+      "email",
+    ]);
     res.status(200).setHeader("Content-Type", "application/json").json(rooms);
   } catch (error) {
     res
