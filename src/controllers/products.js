@@ -83,7 +83,7 @@ exports.addProductToShop = async (req, res) => {
 
 exports.getProductById = async (req, res) => {
 	try {
-		let product = await productModel.findById(req.params.productId);
+		let product = await productModel.findById(req.params.productId).populate("ownerId", ["userName"]);
 		res.status(200).setHeader("Content-Type", "application/json").json(product);
 	} catch (error) {
 		res
