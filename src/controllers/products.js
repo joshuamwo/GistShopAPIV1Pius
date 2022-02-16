@@ -68,6 +68,7 @@ exports.addProductToShop = async (req, res) => {
 		images: req.body.images,
 		shopId: mongoose.mongo.ObjectId(req.params.shopId),
 		ownerId: req.body.ownerId,
+		description: req.body.description,
 	};
 
 	try {
@@ -83,7 +84,9 @@ exports.addProductToShop = async (req, res) => {
 
 exports.getProductById = async (req, res) => {
 	try {
-		let product = await productModel.findById(req.params.productId).populate("ownerId", ["userName"]);
+		let product = await productModel
+			.findById(req.params.productId)
+			.populate("ownerId", ["userName"]);
 		res.status(200).setHeader("Content-Type", "application/json").json(product);
 	} catch (error) {
 		res
