@@ -38,6 +38,10 @@ const userSchema = new Schema(
       min: 0,
       default: 0,
     },
+    currentRoom: {
+      type: String,
+      default: "",
+    }
   },
   {
     timestamps: true,

@@ -29,6 +29,12 @@ roomRouter
 		roomController.updateRoomById)
 	.delete(roomController.deleteRoomById);
 
+roomRouter.route("/user/add/:roomId").put(roomController.addUserToRoom);
+
+roomRouter.route("/user/remove/:roomId").put(roomController.removeUserFromRoom);
+
+roomRouter.route("/speaker/remove/:roomId").put(roomController.removeSpeakerRoom);
+
 roomRouter.route("/get/all/:userId").get(roomController.getRoomsByUserId);
 
 roomRouter.route("/get/all/shops/:shopId").get(roomController.getRoomsByShopId);
