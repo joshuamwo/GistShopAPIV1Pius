@@ -166,6 +166,7 @@ exports.getOrderById = async (req, res) => {
 				path: "itemId",
 				populate: {
 					path: "productId",
+               select: "name",
 					model: "product",
 				},
 			})
