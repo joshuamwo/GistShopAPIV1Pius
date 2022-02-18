@@ -125,7 +125,7 @@ exports.getRoomsAllRooms = async (req, res) => {
       "email",
     ])
     .populate("productIds", ["images", "name", "price", "quantity"])
-    .populate("shopId", ["description", "image"])
+    .populate("shopId", ["name","description", "image"])
     .populate("ownerId", [
       "firstName",
       "lastName",
