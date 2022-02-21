@@ -20,7 +20,10 @@ exports.getAllOrdersByUserId = async (req, res) => {
 				"userName",
 				"email",
 			]);
-		res.status(200).setHeader("Content-Type", "application/json").json(orders);
+		res
+      .status(200)
+      .setHeader("Content-Type", "application/json")
+      .json(orders);
 	} catch (error) {
 		res
 			.status(422)
@@ -56,85 +59,83 @@ exports.getOrderByShopId = async (req, res) => {
 };
 
 exports.addOrder = async (req, res) => {
-	let orderId = new mongoose.Types.ObjectId();
-	let itemId = new mongoose.Types.ObjectId();
-	let total = req.body.tax + req.body.shippingFee + req.body.subtotal;
-	let order = {
-		_id: orderId,
-		customerId: req.params.userId,
-		shippingId: req.body.shippingId,
-		shopId: req.body.shopId,
-		subTotal: req.body.subTotal,
-		tax: req.body.tax,
-		shippingFee: req.body.shippingFee,
-		total,
-		itemId,
-	};
-	//   let customermodel = await userModel.findById(req.params.userId);
-	//   if (customermodel.wallet == undefined || total > customermodel.wallet) {
-	//     res.status(422).setHeader("Content-Type", "application/json").json({
-	//       status: false,
-	//       message: "You dont have enough GC to complete this order",
-	//     });
-	//   } else {
-	let item = {
-		_id: itemId,
-		productId: req.body.productId,
-		quantity: req.body.quantity,
-		orderId,
-	};
+	let grossTotal;
 
 	try {
-		let newOrder = await orderModel.create(order);
-		let newItem = await itemModel.create(item);
+		Promise.all(
+			req.body.map(async (item) => {
+				let orderId = new mongoose.Types.ObjectId();
+				let itemId = new mongoose.Types.ObjectId();
+            
+				let total = item.tax + item.shippingFee + item.subTotal;
+				grossTotal += total;
+				let newOrder = await orderModel.create({
+					_id: orderId,
+					customerId: req.params.userId,
+					shippingId: req.params.shippingId,
+					shopId: item.shopId,
+					subTotal: item.subTotal,
+					tax: item.tax,
+					shippingFee: item.shippingFee,
+					total,
+					itemId,
+				});
+				let newItem = await itemModel.create({
+					_id: itemId,
+					productId: item.productId,
+					quantity: item.quantity,
+					orderId,
+				});
+
+				res
+					.status(200)
+					.setHeader("Content-Type", "application/json")
+					.json({ newOrder, newItem });
+			})
+		);
 
 		// save transaction to the customer
-		let newTransaction = {
-			from: req.params.userId,
-			to: req.body.productOwnerId,
-			reason: utils.Transactionreasons.PURCHASED,
-			amount: req.body.quantity,
-			type: "purchase",
-			deducting: true,
-			shopId: req.body.shopId,
-		};
-		await userModel.findByIdAndUpdate(
-			req.params.userId,
-			{ $inc: { wallet: parseInt(total) * -1 } },
-			{ runValidators: true, new: true }
-		);
-		await transactionModel.create(newTransaction);
+		// let newTransaction = {
+		// 	from: req.params.userId,
+		// 	to: req.body.productOwnerId,
+		// 	reason: utils.Transactionreasons.PURCHASED,
+		// 	amount: req.body.quantity,
+		// 	type: "purchase",
+		// 	deducting: true,
+		// 	shopId: req.body.shopId,
+		// };
+		// await userModel.findByIdAndUpdate(
+		// 	req.params.userId,
+		// 	{ $inc: { wallet: parseInt(grossTotal) * -1 } },
+		// 	{ runValidators: true, new: true }
+		// );
+		// await transactionModel.create(newTransaction);
 
 		// save transaction to the product owner
 
-		let newTransaction1 = {
-			from: req.params.userId,
-			to: req.body.productOwnerId,
-			reason: utils.Transactionreasons.PURCHASED,
-			amount: req.body.quantity,
-			type: "purchase",
-			deducting: false,
-			shopId: req.body.shopId,
-		};
-		await transactionModel.create(newTransaction1);
+		// let newTransaction1 = {
+		// 	from: req.params.userId,
+		// 	to: req.body.productOwnerId,
+		// 	reason: utils.Transactionreasons.PURCHASED,
+		// 	amount: req.body.quantity,
+		// 	type: "purchase",
+		// 	deducting: false,
+		// 	shopId: req.body.shopId,
+		// };
+		// await transactionModel.create(newTransaction1);
 
 		//update owner wallet
-		await userModel.findByIdAndUpdate(
-			req.body.productOwnerId,
-			{ $inc: { wallet: parseFloat(total) } },
-			{ runValidators: true, new: true }
-		);
-		res
-			.status(200)
-			.setHeader("Content-Type", "application/json")
-			.json({ newOrder, newItem });
+		// await userModel.findByIdAndUpdate(
+		// 	req.body.productOwnerId,
+		// 	{ $inc: { wallet: parseFloat(grossTotal) } },
+		// 	{ runValidators: true, new: true }
+		// );
 	} catch (e) {
 		res
 			.status(422)
 			.setHeader("Content-Type", "application/json")
 			.json(e.message);
 	}
-	//   }
 };
 
 exports.updateOrderById = async (req, res) => {
@@ -166,7 +167,7 @@ exports.getOrderById = async (req, res) => {
 				path: "itemId",
 				populate: {
 					path: "productId",
-               select: "name",
+					select: "name",
 					model: "product",
 				},
 			})
