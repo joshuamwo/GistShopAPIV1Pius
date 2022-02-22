@@ -56,11 +56,13 @@ exports.createRoom = async (req, res) => {
         }
       }
     }
+        
+  
 
-    let newRoom = await roomsModel.create(newObj);
-    
-    
-    await userModel.findByIdAndUpdate(req.params.userId,
+    let newRoom = await roomsModel.create(newObj)
+
+        
+    let added = await userModel.findByIdAndUpdate(req.params.userId,
 			{
 				$set: {currentRoom: newRoom._id}
 			}
@@ -336,6 +338,36 @@ exports.removeUserFromRoom = async (req, res) => {
   }
 };
 
+exports.removeUserFromAudienceRoom = async (req, res) => {
+
+  try {
+  
+    let updatedRoom = await roomsModel.findByIdAndUpdate(
+      req.params.roomId,
+      {
+        $pullAll: {userIds: [req.body.users]},
+        
+      },
+      { runValidators: true, new: true, upsert: false }
+    );
+
+    await userModel.findByIdAndUpdate(req.body.users[0],
+			{
+				$set: {currentRoom: ""}
+			}
+		)
+
+    res
+      .status(200)
+      .setHeader("Content-Type", "application/json")
+      .json(updatedRoom);
+  } catch (error) {
+    res
+      .status(422)
+      .setHeader("Content-Type", "application/json")
+      .json(error.message);
+  }
+};
 
 exports.removeSpeakerRoom = async (req, res) => {
 
@@ -371,7 +403,7 @@ exports.removeRaisedHandRoom = async (req, res) => {
     let updatedRoom = await roomsModel.findByIdAndUpdate(
       req.params.roomId,
       {
-        $pullAll: {raisedHands: [req.body.raisedHands]},
+        $pullAll: {raisedHands: [req.body.users]},
         
       },
       { runValidators: true, new: true, upsert: false }

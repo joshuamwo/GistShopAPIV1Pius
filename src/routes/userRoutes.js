@@ -32,12 +32,34 @@ userRouter
 		userController.getUserById
 	)
 	.put(
-		passport.authenticate("jwt", { session: false }),
+		upload.single("profilePicture"),
 		userController.editUserById
 	)
 	.delete(
 		passport.authenticate("jwt", { session: false }),
 		userController.deleteUserById
 	);
+
+userRouter
+	.route("/upgrade/:userId")
+	.put(
+		passport.authenticate("jwt", { session: false }),
+		userController.upgradeAccount
+	)
+
+userRouter
+	.route("/follow/:myUid/:toFollowUid")
+	.put(
+		passport.authenticate("jwt", { session: false }),
+		userController.followUser
+	)
+
+
+userRouter
+	.route("/unfollow/:myUid/:toFollowUid")
+	.put(
+		passport.authenticate("jwt", { session: false }),
+		userController.unFollowUser
+	)
 
 module.exports = userRouter;

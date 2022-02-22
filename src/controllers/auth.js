@@ -12,25 +12,30 @@ var params = {
 };
 
 exports.register = async (req, res, next) => {
-  const newWorker = new userModel({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    bio: req.body.bio,
-    userName: req.body.userName,
-    email: req.body.email,
-    password: req.body.password,
-    phonenumber: req.body.phonenumber,
-    profilePhoto: req.body.profilePhoto,
-  });
-
   try {
+    const newWorker = new userModel({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      bio: req.body.bio,
+      userName: req.body.userName,
+      email: req.body.email,
+      password: req.body.password,
+      phonenumber: req.body.phonenumber,
+      profilePhoto: req.body.profilePhoto,
+    });
+
     let added = await userModel.create(newWorker);
-    const token = jwt.sign(req.body.email, process.env.secret_key);
-    const { _id, firstName, lastName, email, userName, bio, profilePhoto } =
-      added;
-    res.status(200).setHeader("Content-Type", "application/json").json(added);
+    const token = jwt.sign(added.phonenumber, process.env.secret_key);
+    res
+      .status(200)
+      .setHeader("Content-Type", "application/json")
+      .json({ user: added, token });
   } catch (error) {
-    res.status(422).setHeader("Content-Type", "application/json").json(error);
+    console.log(error);
+    res
+      .status(422)
+      .setHeader("Content-Type", "application/json")
+      .json({ status: 400, message: "email/phone number already exists" });
   }
 };
 

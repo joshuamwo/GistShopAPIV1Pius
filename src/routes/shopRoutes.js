@@ -48,4 +48,8 @@ shopRouter
 		shopController.deleteShopById
 	);
 
+	shopRouter
+	.route("/search/:name")
+	.get(shopController.searchForShop)
+
 module.exports = shopRouter;

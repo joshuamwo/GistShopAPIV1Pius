@@ -43,6 +43,14 @@ productRouter
 	);
 
 productRouter
+	.route("/images/:productId")
+	.put(
+		passport.authenticate("jwt", { session: false }),
+		upload.any("image"),
+		productController.updateProductImages
+	)
+
+productRouter
 	.route("/get/all/:userId")
 	.get(
 		passport.authenticate("jwt", { session: false }),

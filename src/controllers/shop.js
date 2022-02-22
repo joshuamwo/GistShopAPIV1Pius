@@ -33,6 +33,27 @@ exports.getAllShopsByUserId = async (req, res) => {
 	}
 };
 
+
+exports.searchForShop = async function (req, res) {
+	try {
+  
+	const shops = await shopModel.find({
+	firstname: { $regex: req.params.name, $options: "i" }}) 
+	.populate("userId", [
+		"firstName",
+		"lastName",
+		"bio",
+		"userName",
+		"email",
+	]);;
+  
+	  res.json(shops);
+	} catch (error) {
+	  res.status(404).send(error);
+	}
+  };
+  
+
 exports.createShop = async (req, res) => {
 	const newShop = {
 		name: req.body.name,

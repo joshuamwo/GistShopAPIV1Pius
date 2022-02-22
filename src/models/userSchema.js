@@ -13,7 +13,7 @@ const userSchema = new Schema(
   {
     firstName: value,
     lastName: value,
-    bio: value,
+    bio: {type: String,},
     userName: value,
     phonenumber: value,
     profilePhoto: value,
@@ -30,14 +30,31 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: true,
-      min: 6,
+      
+    },
+    memberShip:{
+      type: Number
+    },
+    upgradedDate:{
+      type: Number
     },
     wallet: {
       type: Number,
       min: 0,
       default: 0,
     },
+    followers: [
+      {
+        type: Schema.Types.ObjectId,
+			  ref: "user",
+      }
+    ],
+    following: [
+      {
+        type: Schema.Types.ObjectId,
+			  ref: "user",
+      }
+    ],
     currentRoom: {
       type: String,
       default: "",
@@ -70,6 +87,21 @@ userSchema.methods.isValidPassword = async function (password) {
   const compare = await bcrypt.compare(password, user.password);
   return compare;
 };
+
+userSchema.pre("findOneAndUpdate", async function (next) {
+  const user = this;
+
+  if(this._update.$set.profilePhoto != null) {
+
+
+  decode(this._update.$set.profilePhoto, this._conditions.id);
+  const image = `${user._conditions._id}.png`;
+
+  this.profilePhoto = image;
+
+  }
+	next();
+});
 
 const users = model("user", userSchema);
 module.exports = users;

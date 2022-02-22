@@ -29,14 +29,19 @@ roomRouter
 		roomController.updateRoomById)
 	.delete(roomController.deleteRoomById);
 
+roomRouter.route("/get/all/:userId").get(roomController.getRoomsByUserId);
+
+roomRouter.route("/get/all/shops/:shopId").get(roomController.getRoomsByShopId);
+
 roomRouter.route("/user/add/:roomId").put(roomController.addUserToRoom);
 
 roomRouter.route("/user/remove/:roomId").put(roomController.removeUserFromRoom);
 
 roomRouter.route("/speaker/remove/:roomId").put(roomController.removeSpeakerRoom);
 
-roomRouter.route("/get/all/:userId").get(roomController.getRoomsByUserId);
+roomRouter.route("/audience/remove/:roomId").put(roomController.removeUserFromAudienceRoom);
 
-roomRouter.route("/get/all/shops/:shopId").get(roomController.getRoomsByShopId);
+roomRouter.route("/raisedhans/remove/:roomId").put(roomController.removeRaisedHandRoom);
+
 
 module.exports = roomRouter;

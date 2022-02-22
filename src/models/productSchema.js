@@ -19,11 +19,11 @@ const productSchema = new Schema(
 			min: 0,
 			required: true,
 		},
-		images: [
+		images: 
 			{
-				type: String,
+				type: Array,
 			},
-		],
+		
 		shopId: {
 			type: mongoose.Types.ObjectId,
 			required: true,

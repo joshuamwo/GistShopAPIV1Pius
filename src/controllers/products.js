@@ -95,10 +95,32 @@ exports.getProductById = async (req, res) => {
 
 exports.updateProductById = async (req, res) => {
 	let newObj = req.body;
+	let { ...arrays } = req.body;
 	try {
 		let newProduct = await productModel.findByIdAndUpdate(
 			req.params.productId,
 			newObj,
+			{ runValidators: true, new: true }
+		);
+		res
+			.status(200)
+			.setHeader("Content-Type", "application/json")
+			.json(newProduct);
+	} catch (error) {
+		res
+			.status(422)
+			.setHeader("Content-Type", "application/json")
+			.json(error.message);
+	}
+};
+
+exports.updateProductImages = async (req, res) => {
+	let newObj = {
+		images: req.body.images};
+	try {
+		let newProduct = await productModel.findByIdAndUpdate(
+			req.params.productId,
+			{$push : newObj},
 			{ runValidators: true, new: true }
 		);
 		res
