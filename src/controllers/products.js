@@ -95,11 +95,11 @@ exports.getProductById = async (req, res) => {
 
 exports.updateProductById = async (req, res) => {
 	let newObj = req.body;
-	let { ...arrays } = req.body;
 	try {
 		let newProduct = await productModel.findByIdAndUpdate(
 			req.params.productId,
 			newObj,
+	
 			{ runValidators: true, new: true }
 		);
 		res

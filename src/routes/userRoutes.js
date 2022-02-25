@@ -32,7 +32,7 @@ userRouter
 		userController.getUserById
 	)
 	.put(
-		upload.single("profilePicture"),
+		upload.single("profilePhoto"),
 		userController.editUserById
 	)
 	.delete(

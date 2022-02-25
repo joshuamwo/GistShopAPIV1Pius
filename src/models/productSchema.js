@@ -23,7 +23,6 @@ const productSchema = new Schema(
 			{
 				type: Array,
 			},
-		
 		shopId: {
 			type: mongoose.Types.ObjectId,
 			required: true,
@@ -51,14 +50,23 @@ productSchema.pre("save", function (next) {
 
 productSchema.pre("findOneAndUpdate", function (next) {
 	const product = this;
+	
+	console.log(this._update)
 
-	if (this._update.images) {
-		decode(this._update.images, this._conditions._id);
-		const images = product._update.images.map(
+	if (this._update.$push != null) {
+		decode(this._update.$push.images, this._conditions._id);
+		const images = product._update.$push.images.map(
 			(img) =>
-				`${product._update.images.indexOf(img)}_${this._conditions._id}.png`
+				`${product._update.$push.images.indexOf(img)}_${this._conditions._id}.png`
 		);
-		this._update.images = images;
+		this._update.$push.images = images;
+	}else {
+		decode(this._update.$set.images, this._conditions._id);
+		const images = product._update.$set.images.map(
+			(img) =>
+				`${product._update.$set.images.indexOf(img)}_${this._conditions._id}.png`
+		);
+		this._update.$set.images = images;
 	}
 
 	next();

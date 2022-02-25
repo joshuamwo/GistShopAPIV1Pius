@@ -22,6 +22,45 @@ exports.getAllUsers = (req, res, next) => {
 exports.getUserById = (req, res, next) => {
 	userModel
 		.findById(req.params.userId)
+		.populate("following", [
+			"_id",
+			"firstName",
+			"lastName",
+			"userName",
+			"profilePhoto"
+		])
+		.populate("followers",
+		[
+			"_id",
+			"firstName",
+			"lastName",
+			"userName",
+			"profilePhoto"
+		])
+		.then(
+			(user) => {
+				res.statusCode = 200;
+				res.setHeader("Content-Type", "application/json");
+				res.json(user);
+			},
+			(err) => {
+				res.statusCode = 422;
+				res.setHeader("Content-Type", "application/json");
+				res.json(err.errors);
+			}
+		)
+		.catch((err) => {
+			res.statusCode = 422;
+			res.setHeader("Content-Type", "application/json");
+			res.json(err.errors);
+		});
+};
+
+exports.getUserFollowers = (req, res, next) => {
+
+	
+	userModel
+		.find({following : req.params.userId})
 		.then(
 			(user) => {
 				res.statusCode = 200;

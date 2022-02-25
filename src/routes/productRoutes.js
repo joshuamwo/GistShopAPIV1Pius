@@ -41,14 +41,14 @@ productRouter
 		passport.authenticate("jwt", { session: false }),
 		productController.deleteProductById
 	);
-
+	
 productRouter
 	.route("/images/:productId")
 	.put(
 		passport.authenticate("jwt", { session: false }),
-		upload.any("image"),
+		upload.any(),
 		productController.updateProductImages
-	)
+	)	
 
 productRouter
 	.route("/get/all/:userId")

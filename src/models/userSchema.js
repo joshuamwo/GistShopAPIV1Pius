@@ -32,17 +32,6 @@ const userSchema = new Schema(
       type: String,
       
     },
-    memberShip:{
-      type: Number
-    },
-    upgradedDate:{
-      type: Number
-    },
-    wallet: {
-      type: Number,
-      min: 0,
-      default: 0,
-    },
     followers: [
       {
         type: Schema.Types.ObjectId,
@@ -55,6 +44,29 @@ const userSchema = new Schema(
 			  ref: "user",
       }
     ],
+    memberShip:{
+      type: Number
+    },
+    upgradedDate:{
+      type: Number
+    },
+    wallet: {
+      type: Number,
+      min: 0,
+      default: 0,
+    },
+    facebook: {
+      type: String
+    },
+    instagram: {
+      type: String
+    },
+    linkedIn: {
+      type: String
+    },
+    twitter: {
+      type: String
+    },
     currentRoom: {
       type: String,
       default: "",
@@ -97,7 +109,7 @@ userSchema.pre("findOneAndUpdate", async function (next) {
   decode(this._update.$set.profilePhoto, this._conditions.id);
   const image = `${user._conditions._id}.png`;
 
-  this.profilePhoto = image;
+  this._update.$set.profilePhoto = image;
 
   }
 	next();
