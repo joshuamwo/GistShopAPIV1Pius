@@ -32,7 +32,6 @@ exports.getAllProductsByShopId = async (req, res) => {
 				"description",
 				"image",
 			])
-			.populate("ownerId", ["userName"]);
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")
@@ -68,6 +67,7 @@ exports.addProductToShop = async (req, res) => {
 		images: req.body.images,
 		shopId: mongoose.mongo.ObjectId(req.params.shopId),
 		ownerId: req.body.ownerId,
+		description: req.body.description
 	};
 
 	try {
@@ -98,15 +98,14 @@ exports.updateProductById = async (req, res) => {
 	try {
 		let newProduct = await productModel.findByIdAndUpdate(
 			req.params.productId,
-			newObj,
-	
-			{ runValidators: true, new: true }
+			{$set: newObj}
 		);
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")
 			.json(newProduct);
 	} catch (error) {
+		console.log(error)
 		res
 			.status(422)
 			.setHeader("Content-Type", "application/json")

@@ -38,7 +38,7 @@ exports.searchForShop = async function (req, res) {
 	try {
   
 	const shops = await shopModel.find({
-	firstname: { $regex: req.params.name, $options: "i" }}) 
+	name: { $regex: req.params.name, $options: "i" }}) 
 	.populate("userId", [
 		"firstName",
 		"lastName",

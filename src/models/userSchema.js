@@ -55,19 +55,23 @@ const userSchema = new Schema(
       min: 0,
       default: 0,
     },
+    currentRoom: {
+      type: String,
+      default: "",
+    },
     facebook: {
-      type: String
+      type: String,
+      default: "",
     },
     instagram: {
-      type: String
+      type: String,
+      default: "",
     },
     linkedIn: {
-      type: String
+      type: String,
+      default: "",
     },
     twitter: {
-      type: String
-    },
-    currentRoom: {
       type: String,
       default: "",
     }

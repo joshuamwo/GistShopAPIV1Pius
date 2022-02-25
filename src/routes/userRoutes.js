@@ -41,6 +41,13 @@ userRouter
 	);
 
 userRouter
+	.route("search/:name")
+	.get(
+		passport.authenticate("jwt", { session: false }),
+		userController.searchForUser
+	)
+
+userRouter
 	.route("/upgrade/:userId")
 	.put(
 		passport.authenticate("jwt", { session: false }),

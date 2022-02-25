@@ -23,6 +23,11 @@ const productSchema = new Schema(
 			{
 				type: Array,
 			},
+		
+		description: 
+			{
+				type: String,
+			},
 		shopId: {
 			type: mongoose.Types.ObjectId,
 			required: true,
@@ -42,7 +47,7 @@ productSchema.pre("save", function (next) {
 	decode(this.images, this._id);
 	const product = this;
 	const images = product.images.map(
-		(img) => `${product.images.indexOf(img)}_${this._id}.png`
+		(img) => `${Date.now()}_${this._id}.png`
 	);
 	this.images = images;
 	next();
@@ -57,14 +62,14 @@ productSchema.pre("findOneAndUpdate", function (next) {
 		decode(this._update.$push.images, this._conditions._id);
 		const images = product._update.$push.images.map(
 			(img) =>
-				`${product._update.$push.images.indexOf(img)}_${this._conditions._id}.png`
-		);
+			`${Date.now()}_${this._conditions._id}.png`
+			);
 		this._update.$push.images = images;
-	}else {
+	}else if (this._update.$set.images != null) {
 		decode(this._update.$set.images, this._conditions._id);
 		const images = product._update.$set.images.map(
 			(img) =>
-				`${product._update.$set.images.indexOf(img)}_${this._conditions._id}.png`
+				`${Date.now()}_${this._conditions._id}.png`
 		);
 		this._update.$set.images = images;
 	}

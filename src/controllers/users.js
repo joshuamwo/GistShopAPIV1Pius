@@ -27,7 +27,8 @@ exports.getUserById = (req, res, next) => {
 			"firstName",
 			"lastName",
 			"userName",
-			"profilePhoto"
+			"profilePhoto",
+			"followers"
 		])
 		.populate("followers",
 		[
@@ -35,7 +36,8 @@ exports.getUserById = (req, res, next) => {
 			"firstName",
 			"lastName",
 			"userName",
-			"profilePhoto"
+			"profilePhoto",
+			"followers"
 		])
 		.then(
 			(user) => {
@@ -56,29 +58,18 @@ exports.getUserById = (req, res, next) => {
 		});
 };
 
-exports.getUserFollowers = (req, res, next) => {
 
-	
-	userModel
-		.find({following : req.params.userId})
-		.then(
-			(user) => {
-				res.statusCode = 200;
-				res.setHeader("Content-Type", "application/json");
-				res.json(user);
-			},
-			(err) => {
-				res.statusCode = 422;
-				res.setHeader("Content-Type", "application/json");
-				res.json(err.errors);
-			}
-		)
-		.catch((err) => {
-			res.statusCode = 422;
-			res.setHeader("Content-Type", "application/json");
-			res.json(err.errors);
-		});
-};
+exports.searchForUser = async function (req, res) {
+	try {
+  
+	const users = await userModel.find({
+	name: { $regex: req.params.name, $options: "i" }})
+  
+	  res.json(users);
+	} catch (error) {
+	  res.status(404).send(error);
+	}
+  };
 
 exports.addUser = (req, res) => {
 	const newUser = {
