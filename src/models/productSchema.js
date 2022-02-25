@@ -31,12 +31,12 @@ const productSchema = new Schema(
 		shopId: {
 			type: mongoose.Types.ObjectId,
 			required: true,
-         ref: "shop"
+			ref: "shop",
 		},
 		ownerId: {
 			type: Schema.Types.ObjectId,
 			required: true,
-         ref: "user"
+			ref: "user",
 		},
 	},
 	{ timestamps: true, autoIndex: true, autoCreate: true }

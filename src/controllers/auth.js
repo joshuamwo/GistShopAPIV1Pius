@@ -56,7 +56,7 @@ exports.userLogin = (req, res, next) => {
           .json(error.message);
       } else if (user && !error) {
         const token = jwt.sign(req.body.email, process.env.secret_key);
-        const { _id, firstName, lastName, email, userName, bio, profilePhoto } =
+        const { _id, firstName, lastName, email, userName, bio, phonenumber } =
           info;
         res.json({
           token,
@@ -66,7 +66,7 @@ exports.userLogin = (req, res, next) => {
           email,
           userName,
           bio,
-          profilePhoto,
+          phonenumber,
         });
       }
     });

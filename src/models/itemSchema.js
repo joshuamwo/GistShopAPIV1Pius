@@ -17,6 +17,10 @@ const orderItems = Schema(
 			required: true,
 			ref: "product",
 		},
+      // totals: {
+      //    type: Number,
+      //    required: true,
+      // }
 	},
 	{ timestamps: true, autoCreate: true, autoIndex: true }
 );
