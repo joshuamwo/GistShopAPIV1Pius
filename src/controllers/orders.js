@@ -19,8 +19,7 @@ exports.getAllOrdersByUserId = async (req, res) => {
         "bio",
         "userName",
         "email",
-      ])
-      .populate("shopId")
+      ]);
     res.status(200).setHeader("Content-Type", "application/json").json(orders);
   } catch (error) {
     res

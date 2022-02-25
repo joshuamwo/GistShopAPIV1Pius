@@ -63,7 +63,14 @@ exports.searchForUser = async function (req, res) {
 	try {
   
 	const users = await userModel.find({
-	name: { $regex: req.params.name, $options: "i" }})
+	firstName: { $regex: req.params.name, $options: "i" }})
+	.populate("following", [
+			"_id"
+		])
+	.populate("followers",
+		[
+			"_id"
+		])
   
 	  res.json(users);
 	} catch (error) {

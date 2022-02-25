@@ -41,7 +41,7 @@ userRouter
 	);
 
 userRouter
-	.route("search/:name")
+	.route("/search/:name")
 	.get(
 		passport.authenticate("jwt", { session: false }),
 		userController.searchForUser

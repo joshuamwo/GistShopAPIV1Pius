@@ -47,8 +47,8 @@ shopRouter
 		passport.authenticate("jwt", { session: false }),
 		shopController.deleteShopById
 	);
-
-	shopRouter
+	
+shopRouter
 	.route("/search/:name")
 	.get(shopController.searchForShop)
 
