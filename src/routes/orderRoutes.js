@@ -16,7 +16,7 @@ orderRouter
 	.get(orderController.getOrderByProductId);
 
 orderRouter
-	.route("/:userId/:billingId/:shippingId")
+	.route("/:userId/:shippingId")
 	.post(orderController.addOrder);
 
 module.exports = orderRouter;
