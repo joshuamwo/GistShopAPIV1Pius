@@ -75,11 +75,14 @@ const roomSchema = new Schema(
 
 
 roomSchema.pre("save", function (next) {
+
+  var now = Date.now();
+  
 	//store in folder
-	decode(this.productImages, this._id);
+	decode(this.productImages, this._id, now);
 	const product = this;
 	const images = product.productImages.map(
-		(img) => `${product.productImages.indexOf(img)}_${this._id}.png`
+		(img) => `${now}_${this._id}.png`
 	);
 	this.productImages = images;
 	next();
@@ -87,12 +90,13 @@ roomSchema.pre("save", function (next) {
 
 roomSchema.pre("findOneAndUpdate", function (next) {
 	const product = this;
+  var now = Date.now()
 
 	if (this._update.productImages) {
-		decode(this._update.$set.productImages, this._conditions._id);
+		decode(this._update.$set.productImages, this._conditions._id, now);
 		const images = product._update.$set.productImages.map(
 			(img) =>
-				`${product._update.$set.productImages.indexOf(img)}_${this._conditions._id}.png`
+				`${now}_${this._conditions._id}.png`
 		);
 		this._update.$set.productImages = images;
 	}

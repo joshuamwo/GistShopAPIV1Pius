@@ -43,11 +43,14 @@ const productSchema = new Schema(
 );
 
 productSchema.pre("save", function (next) {
+
+	var now = Date.now()
+
 	//store in folder
-	decode(this.images, this._id);
+	decode(this.images, this._id, now);
 	const product = this;
 	const images = product.images.map(
-		(img) => `${Date.now()}_${this._id}.png`
+		(img) => `${now}_${this._id}.png`
 	);
 	this.images = images;
 	next();
@@ -55,21 +58,22 @@ productSchema.pre("save", function (next) {
 
 productSchema.pre("findOneAndUpdate", function (next) {
 	const product = this;
+	var now = Date.now()
 	
 	console.log(this._update)
 
 	if (this._update.$push != null) {
-		decode(this._update.$push.images, this._conditions._id);
+		decode(this._update.$push.images, this._conditions._id, now);
 		const images = product._update.$push.images.map(
 			(img) =>
-			`${Date.now()}_${this._conditions._id}.png`
+			`${now}_${this._conditions._id}.png`
 			);
 		this._update.$push.images = images;
 	}else if (this._update.$set.images != null) {
-		decode(this._update.$set.images, this._conditions._id);
+		decode(this._update.$set.images, this._conditions._id, now);
 		const images = product._update.$set.images.map(
 			(img) =>
-				`${Date.now()}_${this._conditions._id}.png`
+				`${now}_${this._conditions._id}.png`
 		);
 		this._update.$set.images = images;
 	}
