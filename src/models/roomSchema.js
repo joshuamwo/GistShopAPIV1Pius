@@ -82,7 +82,7 @@ roomSchema.pre("save", function (next) {
 	decode(this.productImages, this._id, now);
 	const product = this;
 	const images = product.productImages.map(
-		(img) => `${now}_${this._id}.png`
+		(img) => `${now}${product._update.$set.productImages.indexOf(img)}_${this._id}.png`
 	);
 	this.productImages = images;
 	next();
@@ -96,7 +96,7 @@ roomSchema.pre("findOneAndUpdate", function (next) {
 		decode(this._update.$set.productImages, this._conditions._id, now);
 		const images = product._update.$set.productImages.map(
 			(img) =>
-				`${now}_${this._conditions._id}.png`
+				`${now}${product._update.$set.productImages.indexOf(img)}_${this._conditions._id}.png`
 		);
 		this._update.$set.productImages = images;
 	}

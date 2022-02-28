@@ -22,7 +22,7 @@ decode = (imgs, id, date) => {
 				const split = img.split(",");
 				const base64Data = split[1];
 				let index = imgs.indexOf(img);
-				fs.writeFileSync("./public/img/" + date + "_" + id + ".png", base64Data, "base64");
+				fs.writeFileSync("./public/img/" + date + index + "_" + id + ".png", base64Data, "base64");
 			});
 		} else {
 			const split = imgs.split(",");

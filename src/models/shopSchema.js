@@ -41,6 +41,10 @@ const shopSchema = new Schema(
 			ref: "user",
 			required: true,
 		},
+		open: {
+			type: Boolean,
+			default: true
+		}
 	},
 	{ timestamps: true, autoCreate: true, autoIndex: true }
 );

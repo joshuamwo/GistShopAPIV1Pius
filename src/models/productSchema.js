@@ -50,7 +50,7 @@ productSchema.pre("save", function (next) {
 	decode(this.images, this._id, now);
 	const product = this;
 	const images = product.images.map(
-		(img) => `${now}_${this._id}.png`
+		(img) => `${now}${product.images.indexOf(img)}_${this._id}.png`
 	);
 	this.images = images;
 	next();
@@ -66,14 +66,15 @@ productSchema.pre("findOneAndUpdate", function (next) {
 		decode(this._update.$push.images, this._conditions._id, now);
 		const images = product._update.$push.images.map(
 			(img) =>
-			`${now}_${this._conditions._id}.png`
+			`${now}${product._update.$push.images.indexOf(img)}_${this._conditions._id}.png`
 			);
 		this._update.$push.images = images;
+		
 	}else if (this._update.$set.images != null) {
 		decode(this._update.$set.images, this._conditions._id, now);
 		const images = product._update.$set.images.map(
 			(img) =>
-				`${now}_${this._conditions._id}.png`
+				`${now}${product._update.$set.images.indexOf(img)}_${this._conditions._id}.png`
 		);
 		this._update.$set.images = images;
 	}
