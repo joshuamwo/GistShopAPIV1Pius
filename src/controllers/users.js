@@ -1,6 +1,7 @@
 const userModel = require("../models/userSchema");
 const jwt = require("jsonwebtoken");
 require("dotenv").config({ path: `${__dirname}/../../.env` });
+const functions = require("../shared/functions")
 
 const upgradeAmount = 200;
 
@@ -233,6 +234,17 @@ exports.followUser = async (req, res) => {
 			},
 			{ runValidators: true, new: true, upsert: false }
 		  );
+
+		  functions.saveActivity(
+			orderId,
+			"New follower",
+			'ProfileScreen',
+			false,
+			null,
+			myUid,
+			"You have a new follower",
+			toFollowUid
+		  )
 
 		  res.statusCode = 200;
 		  res.setHeader("Content-Type", "application/json");

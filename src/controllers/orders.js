@@ -4,6 +4,8 @@ const itemModel = require("../models/itemSchema");
 const userModel = require("../models/userSchema");
 const transactionModel = require("../models/transactionSchema");
 const utils = require("../../utils");
+const functions = require("../shared/functions")
+
 
 exports.getAllOrdersBySeller = async (req, res) => {};
 
@@ -144,6 +146,37 @@ exports.addOrder = async (req, res) => {
 					{ $inc: { wallet: parseFloat(total) } },
 					{ runValidators: true, new: true }
 				);
+
+
+					/*......................................
+                     *save activity for seller
+               ......................................*/
+
+				functions.saveActivity(
+					orderId,
+					"New order",
+					'OrderScreen',
+					false,
+					null,
+					item.sellerId,
+					"You just got an order",
+					req.params.userId
+				  )
+
+				/*......................................
+                     *save activity for buyer
+               ......................................*/
+
+				functions.saveActivity(
+					orderId,
+					"New order",
+					'OrderScreen',
+					false,
+					null,
+					req.params.userId,
+					"You ordered a product",
+					item.sellerId
+				  )
 			})
 		)
 			.then(() => {

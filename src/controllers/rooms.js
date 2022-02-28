@@ -1,5 +1,7 @@
 const roomsModel = require("../models/roomSchema");
 const userModel = require("../models/userSchema");
+const functions = require("../shared/functions")
+
 
 var mongoose = require("mongoose");
 const arrayToObjectIds = require("../shared/arrayToObjectIds");
@@ -56,17 +58,30 @@ exports.createRoom = async (req, res) => {
         }
       }
     }
-        
-  
 
     let newRoom = await roomsModel.create(newObj)
 
         
-    let added = await userModel.findByIdAndUpdate(req.params.userId,
+    await userModel.findByIdAndUpdate(req.params.userId,
 			{
 				$set: {currentRoom: newRoom._id}
 			}
 		)
+
+    for( let i = 0; i < user.followers.length; i ++) {
+
+      functions.saveActivity(
+        newRoom._id,
+        user.firstName + " " + user.lastName,
+        'RoomScreen',
+        false,
+        null,
+        user.followers[i]._id,
+        user.firstName + " " + user.lastName + " started a room. Join?.",
+        user._id
+      )
+
+    }
     
     res.status(200).setHeader("Content-Type", "application/json").json(newRoom);
   } catch (error) {

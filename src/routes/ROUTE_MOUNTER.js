@@ -8,6 +8,7 @@ const billingRouter = require("./billing");
 const addressRouter = require("./address");
 const roomRouter = require("./roomRoutes");
 const transRouter = require("./transactions");
+const activityRouter = require("./activitiesRoute")
 
 const passport = require("passport");
 
@@ -24,3 +25,4 @@ app.use("/address", passport.authenticate("jwt", { session: false }), addressRou
 app.use("/billing", passport.authenticate("jwt", { session: false }), billingRouter);
 app.use("/rooms", passport.authenticate("jwt", { session: false }), roomRouter);
 app.use("/transactions", passport.authenticate("jwt", { session: false }), transRouter);
+app.use("/activity", activityRouter);
