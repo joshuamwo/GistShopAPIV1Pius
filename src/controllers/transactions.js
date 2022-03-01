@@ -31,6 +31,7 @@ exports.createTransaction = async (req, res) => {
 		type: req.body.type,
 		deducting: req.body.deducting,
       shopId: req.body.shopId,
+	  date: Date.now()
 	};
 	try {
 		if (newTransaction.type === "purchase") {

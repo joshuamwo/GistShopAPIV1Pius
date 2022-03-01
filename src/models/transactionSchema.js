@@ -25,6 +25,7 @@ const transactionSchema = new Schema(
          ref: "shop"
 		},
 		reason: value,
+		
 		amount: {
 			type: Number,
 			required: true,
@@ -38,6 +39,9 @@ const transactionSchema = new Schema(
 			type: Boolean,
 			required: true,
 		},
+		date: {
+			type: Number,
+		}
 	},
 	{ timestamps: true, autoIndex: true, autoCreate: true }
 );
