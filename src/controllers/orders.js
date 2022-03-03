@@ -67,7 +67,7 @@ exports.addOrder = async (req, res) => {
 				let orderId = new mongoose.Types.ObjectId();
 				let itemId = new mongoose.Types.ObjectId();
 
-				let total = item.tax + item.shippingFee + item.subTotal;
+				let total = parseFloat(item.tax) + parseFloat(item.shippingFee) + parseFloat(item.subTotal);
 
 				{
 					/*......................................
@@ -77,7 +77,7 @@ exports.addOrder = async (req, res) => {
 				newOrder = await orderModel.create({
 					_id: orderId,
 					customerId: req.params.userId,
-					shippingId: req.params.shippingId,
+					shippingId: item.shippingId,
 					shopId: item.shopId,
 					subTotal: item.subTotal,
 					tax: item.tax,
@@ -103,12 +103,13 @@ exports.addOrder = async (req, res) => {
 				}
 				let newTransaction = {
 					from: req.params.userId,
-					to: item.sellerId,
+					to: item.productOwnerId,
 					reason: utils.Transactionreasons.PURCHASED,
 					amount: item.quantity,
 					type: "purchase",
 					deducting: true,
 					shopId: item.shopId,
+					date: Date.now()
 				};
 				await transactionModel.create(newTransaction);
 				{
@@ -118,12 +119,13 @@ exports.addOrder = async (req, res) => {
 				}
 				let newTransaction1 = {
 					from: req.params.userId,
-					to: item.sellerId,
+					to: item.productOwnerId,
 					reason: utils.Transactionreasons.PURCHASED,
 					amount: item.quantity,
 					type: "purchase",
 					deducting: false,
 					shopId: item.shopId,
+					date: Date.now()
 				};
 				await transactionModel.create(newTransaction1);
 				{
@@ -158,7 +160,7 @@ exports.addOrder = async (req, res) => {
 					'OrderScreen',
 					false,
 					null,
-					item.sellerId,
+					item.productOwnerId,
 					"You just got an order",
 					req.params.userId
 				  )
@@ -175,7 +177,7 @@ exports.addOrder = async (req, res) => {
 					null,
 					req.params.userId,
 					"You ordered a product",
-					item.sellerId
+					item.productOwnerId
 				  )
 			})
 		)
@@ -203,6 +205,9 @@ exports.updateOrderById = async (req, res) => {
 	let { productIds, ...setter } = req.body;
 
 	try {
+
+		orderModel.updateMany({$set: {wallet: 2000}})
+
 		let newOrder = await orderModel.findByIdAndUpdate(
 			req.params.orderId,
 			{ $set: req.body },

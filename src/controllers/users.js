@@ -123,10 +123,10 @@ exports.editUserById = (req, res) => {
 			(user) => {
 				console.log(user)
 				const token = jwt.sign(user.email, process.env.secret_key);
-				const { _id, firstName, lastName, email, userName, bio, profilePhoto } = user;
+				const { _id, firstName, lastName, email, userName, bio, profilePhoto, phonenumber } = user;
 				res.statusCode = 200;
 				res.setHeader("Content-Type", "application/json");
-				res.json({ token, _id, firstName, lastName, email, userName, bio, profilePhoto });
+				res.json({ user });
 			},
 			(err) => {
 				console.log(err)

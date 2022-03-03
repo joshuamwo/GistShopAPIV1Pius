@@ -68,7 +68,8 @@ const roomSchema = new Schema(
     },
     productPrice: {
     	type:Number
-    }
+    },
+    token: value,
   },
   { timestamps: true, autoIndex: true, autoCreate: true }
 );
