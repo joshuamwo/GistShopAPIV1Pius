@@ -21,7 +21,7 @@ const transactionSchema = new Schema(
 		},
 		shopId: {
 			type: Schema.Types.ObjectId,
-			required: true,
+			
          ref: "shop"
 		},
 		reason: value,
@@ -32,7 +32,7 @@ const transactionSchema = new Schema(
 		},
 		type: {
 			type: String,
-			enum: ["purchase", "sending"],
+			enum: ["purchase", "sending", "order", "upgrade"],
 			required: true,
 		},
 		deducting: {
@@ -41,6 +41,7 @@ const transactionSchema = new Schema(
 		},
 		date: {
 			type: Number,
+			default: 0
 		}
 	},
 	{ timestamps: true, autoIndex: true, autoCreate: true }

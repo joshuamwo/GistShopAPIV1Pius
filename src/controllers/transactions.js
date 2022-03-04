@@ -6,8 +6,9 @@ exports.getUserTransactionsByUserId = async (req, res) => {
 	try {
 		let transactions = await transactionModel
 			.find({
-				$or: [{ from: req.params.userId }, { to: req.params.userId }],
+				$or: [{ to: req.params.userId }],
 			})
+			.sort({date: 1})
 			.populate("from", ["firstName", "lastName", "bio", "userName", "email"])
 			.populate("to", ["firstName", "lastName", "bio", "userName", "email"])
 		res

@@ -105,7 +105,7 @@ exports.addOrder = async (req, res) => {
 					from: req.params.userId,
 					to: item.productOwnerId,
 					reason: utils.Transactionreasons.PURCHASED,
-					amount: item.quantity,
+					amount: total,
 					type: "purchase",
 					deducting: true,
 					shopId: item.shopId,
@@ -120,9 +120,9 @@ exports.addOrder = async (req, res) => {
 				let newTransaction1 = {
 					from: req.params.userId,
 					to: item.productOwnerId,
-					reason: utils.Transactionreasons.PURCHASED,
-					amount: item.quantity,
-					type: "purchase",
+					reason: utils.Transactionreasons.PURCHASE,
+					amount: total,
+					type: "order",
 					deducting: false,
 					shopId: item.shopId,
 					date: Date.now()
@@ -205,9 +205,6 @@ exports.updateOrderById = async (req, res) => {
 	let { productIds, ...setter } = req.body;
 
 	try {
-
-		orderModel.updateMany({$set: {wallet: 2000}})
-
 		let newOrder = await orderModel.findByIdAndUpdate(
 			req.params.orderId,
 			{ $set: req.body },

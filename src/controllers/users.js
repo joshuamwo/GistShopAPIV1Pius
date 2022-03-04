@@ -2,6 +2,9 @@ const userModel = require("../models/userSchema");
 const jwt = require("jsonwebtoken");
 require("dotenv").config({ path: `${__dirname}/../../.env` });
 const functions = require("../shared/functions")
+const transactionModel = require("../models/transactionSchema");
+const utils = require("../../utils");
+
 
 const upgradeAmount = 200;
 
@@ -126,7 +129,7 @@ exports.editUserById = (req, res) => {
 				const { _id, firstName, lastName, email, userName, bio, profilePhoto, phonenumber } = user;
 				res.statusCode = 200;
 				res.setHeader("Content-Type", "application/json");
-				res.json({ user });
+				res.json({ user, token });
 			},
 			(err) => {
 				console.log(err)
@@ -175,7 +178,18 @@ exports.upgradeAccount = async (req, res) => {
 					
 				)
 				.then(
-					(user) => {
+					async (user) => {
+
+						let newTransaction = {
+							to: req.params.userId,
+							reason: utils.Transactionreasons.UPGRADE,
+							amount: upgradeAmount,
+							type: "upgrade",
+							deducting: true,
+							date: Date.now()
+						};
+						await transactionModel.create(newTransaction);
+
 						const token = jwt.sign(user.email, process.env.secret_key);
 						const { _id, firstName, lastName, email, userName, bio } = user;
 						res.statusCode = 200;

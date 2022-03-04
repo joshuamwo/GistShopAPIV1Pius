@@ -20,12 +20,11 @@ exports.register = async (req, res, next) => {
       userName: req.body.userName,
       email: req.body.email,
       password: req.body.password,
-      phonenumber: req.body.phonenumber,
       profilePhoto: req.body.profilePhoto,
     });
 
     let added = await userModel.create(newWorker);
-    const token = jwt.sign(added.phonenumber, process.env.secret_key);
+    const token = jwt.sign(added.email, process.env.secret_key);
     res
       .status(200)
       .setHeader("Content-Type", "application/json")
