@@ -29,6 +29,24 @@ exports.createRoom = async (req, res) => {
   }
 };
 
+exports.getRecentRooms = async (req,res) => {
+   try {
+			let rooms = await roomsModel
+				.find()
+				.sort({ _id: -1 })
+				.limit(8)
+				.populate("shopId", ["name", "image"])
+				.populate("ownerId", ["userName"]);
+			res.status(200).setHeader("Content-Type", "application/json").json(rooms);
+		} catch (error) {
+			res
+				.status(422)
+				.setHeader("Content-Type", "application/json")
+				.json(error.message);
+		}
+}
+
+
 exports.getRoomsByUserId = async (req, res) => {
   try {
     let rooms = await roomsModel

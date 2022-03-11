@@ -1,5 +1,27 @@
 var mongoose = require("mongoose");
+const { isExportDeclaration } = require("typescript");
 var productModel = require("../models/productSchema");
+
+exports.getRecentProducts = async (req, res) => {
+   	try {
+			let products = await productModel
+				.find()
+				.sort({ _id: -1 })
+				.limit(8)
+				.populate("shopId", ["image"])
+				.populate("ownerId", ["userName"]);
+			res
+				.status(200)
+				.setHeader("Content-Type", "application/json")
+				.json(products);
+		} catch (error) {
+			res
+				.status(422)
+				.setHeader("Content-Type", "application/json")
+				.json(error.message);
+		}
+}
+
 
 exports.getAllProducts = async (req, res) => {
 	try {

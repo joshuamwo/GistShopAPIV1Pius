@@ -16,9 +16,7 @@ const passport = require("passport");
 
 require("../services/authenticate");
 
-productRouter.route("/")
-   .get(productController.getAllProducts);
-
+productRouter.route("/").get(productController.getAllProducts);
 
 productRouter
 	.route("/:shopId")
@@ -48,5 +46,8 @@ productRouter
 		passport.authenticate("jwt", { session: false }),
 		productController.getAllProductsByUserId
 	);
+productRouter
+	.route("/products/products/recent")
+	.get(productController.getRecentProducts);
 
 module.exports = productRouter;

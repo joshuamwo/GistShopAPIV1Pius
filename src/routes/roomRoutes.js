@@ -2,7 +2,6 @@ const express = require("express");
 const roomController = require("../controllers/rooms");
 const roomRouter = express.Router();
 
-
 const multer = require("multer");
 
 const storage = multer.memoryStorage();
@@ -14,19 +13,17 @@ const fileFilter = (req, file, cb) => {
 
 let upload = multer({ storage, fileFilter });
 
-
 roomRouter.route("/").get(roomController.getRoomsAllRooms);
+roomRouter.route("/recent").get(roomController.getRecentRooms);
 
-roomRouter.route("/:userId").post(
-	upload.any("productImages"),
-	roomController.createRoom);
+roomRouter
+	.route("/:userId")
+	.post(upload.any("productImages"), roomController.createRoom);
 
 roomRouter
 	.route("/rooms/:roomId")
 	.get(roomController.getRoomById)
-	.put(
-		upload.any("productImages"),
-		roomController.updateRoomById)
+	.put(upload.any("productImages"), roomController.updateRoomById)
 	.delete(roomController.deleteRoomById);
 
 roomRouter.route("/get/all/:userId").get(roomController.getRoomsByUserId);
