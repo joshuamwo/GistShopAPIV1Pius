@@ -9,9 +9,11 @@ const utils = require("../../utils");
 const upgradeAmount = 200;
 
 exports.getAllUsers = (req, res, next) => {
+	
 	userModel
 		.find({})
 		.sort("-_id")
+		.limit(20)
 		.then(
 			(workers) => {
 				res.statusCode = 200;
@@ -26,23 +28,9 @@ exports.getAllUsers = (req, res, next) => {
 exports.getUserById = (req, res, next) => {
 	userModel
 		.findById(req.params.userId)
-		.populate("following", [
-			"_id",
-			"firstName",
-			"lastName",
-			"userName",
-			"profilePhoto",
-			"followers"
-		])
-		.populate("followers",
-		[
-			"_id",
-			"firstName",
-			"lastName",
-			"userName",
-			"profilePhoto",
-			"followers"
-		])
+		.populate("shopId", [
+					'name','email','location','phoneNumber','image','description','open','ownerId'
+				])
 		.then(
 			(user) => {
 				res.statusCode = 200;
@@ -63,18 +51,13 @@ exports.getUserById = (req, res, next) => {
 };
 
 
+
+
 exports.searchForUser = async function (req, res) {
 	try {
   
 	const users = await userModel.find({
-	firstName: { $regex: req.params.name, $options: "i" }})
-	.populate("following", [
-			"_id"
-		])
-	.populate("followers",
-		[
-			"_id"
-		])
+	firstName: { $regex: req.params.name, $options: "i" }}).limit(20)
   
 	  res.json(users);
 	} catch (error) {
@@ -126,7 +109,7 @@ exports.editUserById = (req, res) => {
 			(user) => {
 				console.log(user)
 				const token = jwt.sign(user.email, process.env.secret_key);
-				const { _id, firstName, lastName, email, userName, bio, profilePhoto, phonenumber } = user;
+				const { _id, firstName, lastName, email, userName, bio, profilePhoto, phonenumber, wallet } = user;
 				res.statusCode = 200;
 				res.setHeader("Content-Type", "application/json");
 				res.json({ user, token });
@@ -250,7 +233,7 @@ exports.followUser = async (req, res) => {
 		  );
 
 		  functions.saveActivity(
-			orderId,
+			toFollowUid,
 			"New follower",
 			'ProfileScreen',
 			false,
@@ -259,16 +242,20 @@ exports.followUser = async (req, res) => {
 			"You have a new follower",
 			toFollowUid
 		  )
+		  
+		  console.log(myUpdatedUser + " ")
 
 		  res.statusCode = 200;
 		  res.setHeader("Content-Type", "application/json");
+		  myUpdatedUser['success'] = true;
 		  res.json(myUpdatedUser);
 
 	} catch (error) {
 
+console.log(error + " ")
 		res.statusCode = 400;
 		res.setHeader("Content-Type", "application/json");
-		res.json(error);		
+		res.json({"success": false});		
 		
 	}
 }

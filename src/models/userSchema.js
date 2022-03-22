@@ -13,10 +13,10 @@ const userSchema = new Schema(
   {
     firstName: value,
     lastName: value,
-    bio: {type: String,},
+    bio: {type: String,default: ""},
     userName: value,
-    phonenumber: value,
-    profilePhoto: value,
+    phonenumber: {type: String,},
+    profilePhoto: {type: String,default: ""},
     email: {
       type: String,
       trim: true,
@@ -74,6 +74,11 @@ const userSchema = new Schema(
     twitter: {
       type: String,
       default: "",
+    },
+    shopId: {
+        type: Schema.Types.ObjectId,
+		ref: "shop",
+        default: null,
     }
   },
   {
@@ -89,10 +94,13 @@ userSchema.pre("save", async function (next) {
   const user = this;
   const hash = await bcrypt.hash(this.password, 10);
   this.password = hash;
-  decode(this.profilePhoto, this._id);
-  const image = `${user._id}.png`;
+  if(this.profilePhoto){
+	  decode(this.profilePhoto, this._id);
+	  const image = `${user._id}.png`;
+	
+	  this.profilePhoto = image;
 
-  this.profilePhoto = image;
+  }
   next();
 
   next();
@@ -104,20 +112,24 @@ userSchema.methods.isValidPassword = async function (password) {
   return compare;
 };
 
+/*
 userSchema.pre("findOneAndUpdate", async function (next) {
   const user = this;
+  
+ 
 
   if(this._update.$set.profilePhoto != null) {
 
-
-  decode(this._update.$set.profilePhoto, this._conditions.id);
-  const image = `${user._conditions._id}.png`;
+ console.log("Update " + this._conditions._id)
+  decode(this._update.$set.profilePhoto, this._conditions._id);
+  const image = `${this._conditions._id}.png`;
 
   this._update.$set.profilePhoto = image;
 
   }
 	next();
 });
+*/
 
 const users = model("user", userSchema);
 module.exports = users;

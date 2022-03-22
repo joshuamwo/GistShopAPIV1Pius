@@ -69,7 +69,12 @@ const roomSchema = new Schema(
     productPrice: {
     	type:Number
     },
-    token: value,
+    token: {
+	    type: String
+    },
+    roomType: {
+	    type: String
+    },
   },
   { timestamps: true, autoIndex: true, autoCreate: true }
 );
@@ -83,7 +88,7 @@ roomSchema.pre("save", function (next) {
 	decode(this.productImages, this._id, now);
 	const product = this;
 	const images = product.productImages.map(
-		(img) => `${now}${product._update.$set.productImages.indexOf(img)}_${this._id}.png`
+		(img) => `${now}${product.productImages.indexOf(img)}_${this._id}.png`
 	);
 	this.productImages = images;
 	next();

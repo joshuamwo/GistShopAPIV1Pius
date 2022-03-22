@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const itemModel = require("../models/itemSchema");
 const userModel = require("../models/userSchema");
 const transactionModel = require("../models/transactionSchema");
+const shopModel = require("../models/shopSchema");
+
 const utils = require("../../utils");
 const functions = require("../shared/functions")
 
@@ -67,6 +69,8 @@ exports.addOrder = async (req, res) => {
 				let orderId = new mongoose.Types.ObjectId();
 				let itemId = new mongoose.Types.ObjectId();
 
+				let productShop = await shopModel.findById(item.shopId)
+
 				let total = parseFloat(item.tax) + parseFloat(item.shippingFee) + parseFloat(item.subTotal);
 
 				{
@@ -102,8 +106,8 @@ exports.addOrder = async (req, res) => {
             ......................................*/
 				}
 				let newTransaction = {
-					from: req.params.userId,
-					to: item.productOwnerId,
+					from: item.productOwnerId,
+					to: req.params.userId,
 					reason: utils.Transactionreasons.PURCHASED,
 					amount: total,
 					type: "purchase",
@@ -176,7 +180,7 @@ exports.addOrder = async (req, res) => {
 					false,
 					null,
 					req.params.userId,
-					"You ordered a product",
+					"You ordered a product from shop " + productShop.name,
 					item.productOwnerId
 				  )
 			})
@@ -187,13 +191,17 @@ exports.addOrder = async (req, res) => {
 					.setHeader("Content-Type", "application/json")
 					.json({ newOrder, newItem });
 			})
-			.catch((e) =>
+			.catch((e) =>{
+				console.log(e + " ")
 				res
 					.status(422)
 					.setHeader("Content-Type", "application/json")
 					.json(e.message)
-			);
+					});
+			
 	} catch (e) {
+		
+		console.log(e + " ")
 		res
 			.status(422)
 			.setHeader("Content-Type", "application/json")

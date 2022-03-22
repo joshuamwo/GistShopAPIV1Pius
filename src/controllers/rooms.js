@@ -228,13 +228,13 @@ exports.getRoomsByShopId = async (req, res) => {
 };
 
 exports.updateRoomById = async (req, res) => {
-  let { title, ...arrays } = req.body;
+  let { title, token, ...arrays } = req.body;
   try {
     let updatedRoom = await roomsModel.findByIdAndUpdate(
       req.params.roomId,
       {
-        $push: arrays,
-        $set: { title },
+        $addToSet: arrays,
+        $set: { title, token },
       },
       { runValidators: true, new: true, upsert: false }
     );
@@ -482,7 +482,7 @@ exports.getRoomById = async (req, res) => {
         "email",
         "profilePhoto"
       ])
-      .populate("productIds", ["images", "name", "price", "quantity"])
+      .populate("productIds")
       .populate("shopId", ["description", "image"])
       .populate("ownerId", [
         "firstName",
