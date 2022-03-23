@@ -26,6 +26,7 @@ exports.getAllUsers = (req, res, next) => {
 };
 
 exports.getUserById = (req, res, next) => {
+
 	userModel
 		.findById(req.params.userId)
 		.populate("shopId", [
@@ -33,6 +34,12 @@ exports.getUserById = (req, res, next) => {
 				])
 		.then(
 			(user) => {
+
+				user.followersCount = user.followers.length
+				user.followingCount = user.following.length
+				user.followers = []
+				user.following = []
+
 				res.statusCode = 200;
 				res.setHeader("Content-Type", "application/json");
 				res.json(user);
@@ -49,8 +56,6 @@ exports.getUserById = (req, res, next) => {
 			res.json(err.errors);
 		});
 };
-
-
 
 
 exports.searchForUser = async function (req, res) {
