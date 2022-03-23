@@ -9,7 +9,7 @@ const utils = require("../../utils");
 const functions = require("../shared/functions")
 
 
-exports.getAllOrdersBySeller = async (req, res) => {};
+exports.getAllOrdersBySeller = async (req, res) => { };
 
 exports.getAllOrdersByUserId = async (req, res) => {
 	try {
@@ -23,7 +23,18 @@ exports.getAllOrdersByUserId = async (req, res) => {
 				"bio",
 				"userName",
 				"email",
-			]);
+			]).populate({
+				path: "itemId",
+				populate: {
+					path: "productId",
+					select: ["name", "images"],
+					model: "product",
+				},
+			})
+			.populate("billingId")
+			.populate("shippingId")
+			.sort({date: -1});
+
 		res.status(200).setHeader("Content-Type", "application/json").json(orders);
 	} catch (error) {
 		res
@@ -37,7 +48,7 @@ exports.getOrderByProductId = async (req, res) => {
 	try {
 		let orders = await orderModel
 			.find({ productIds: req.params.productId })
-			.populate("productIds");
+			.populate("productId");
 		res.status(200).setHeader("Content-Type", "application/json").json(orders);
 	} catch (error) {
 		res
@@ -75,8 +86,8 @@ exports.addOrder = async (req, res) => {
 
 				{
 					/*......................................
-               *
-            ......................................*/
+			   *
+			......................................*/
 				}
 				newOrder = await orderModel.create({
 					_id: orderId,
@@ -88,11 +99,14 @@ exports.addOrder = async (req, res) => {
 					shippingFee: item.shippingFee,
 					total,
 					itemId,
+					productId: item.productId,
+					quantity: item.quantity,
+					date: Date.now()
 				});
 				{
 					/*......................................
-                *
-            ......................................*/
+				*
+			......................................*/
 				}
 				newItem = await itemModel.create({
 					_id: itemId,
@@ -102,8 +116,8 @@ exports.addOrder = async (req, res) => {
 				});
 				{
 					/*......................................
-                *save transaction to the customer
-            ......................................*/
+				*save transaction to the customer
+			......................................*/
 				}
 				let newTransaction = {
 					from: item.productOwnerId,
@@ -118,8 +132,8 @@ exports.addOrder = async (req, res) => {
 				await transactionModel.create(newTransaction);
 				{
 					/*......................................
-                  *save transaction to the product owner
-            ......................................*/
+				  *save transaction to the product owner
+			......................................*/
 				}
 				let newTransaction1 = {
 					from: req.params.userId,
@@ -134,8 +148,8 @@ exports.addOrder = async (req, res) => {
 				await transactionModel.create(newTransaction1);
 				{
 					/*......................................
-		            *update buyer's wallet
-            ......................................*/
+					*update buyer's wallet
+			......................................*/
 				}
 				await userModel.findByIdAndUpdate(
 					req.params.userId,
@@ -144,8 +158,8 @@ exports.addOrder = async (req, res) => {
 				);
 				{
 					/*......................................
-                     *update seller's wallet
-               ......................................*/
+					 *update seller's wallet
+			   ......................................*/
 				}
 				await userModel.findByIdAndUpdate(
 					item.sellerId,
@@ -154,9 +168,9 @@ exports.addOrder = async (req, res) => {
 				);
 
 
-					/*......................................
-                     *save activity for seller
-               ......................................*/
+				/*......................................
+				 *save activity for seller
+		   ......................................*/
 
 				functions.saveActivity(
 					orderId,
@@ -167,11 +181,11 @@ exports.addOrder = async (req, res) => {
 					item.productOwnerId,
 					"You just got an order",
 					req.params.userId
-				  )
+				)
 
 				/*......................................
-                     *save activity for buyer
-               ......................................*/
+					 *save activity for buyer
+			   ......................................*/
 
 				functions.saveActivity(
 					orderId,
@@ -182,7 +196,7 @@ exports.addOrder = async (req, res) => {
 					req.params.userId,
 					"You ordered a product from shop " + productShop.name,
 					item.productOwnerId
-				  )
+				)
 			})
 		)
 			.then(() => {
@@ -191,16 +205,16 @@ exports.addOrder = async (req, res) => {
 					.setHeader("Content-Type", "application/json")
 					.json({ newOrder, newItem });
 			})
-			.catch((e) =>{
+			.catch((e) => {
 				console.log(e + " ")
 				res
 					.status(422)
 					.setHeader("Content-Type", "application/json")
 					.json(e.message)
-					});
-			
+			});
+
 	} catch (e) {
-		
+
 		console.log(e + " ")
 		res
 			.status(422)

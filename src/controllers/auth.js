@@ -2,6 +2,18 @@ const userModel = require("../models/userSchema");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 
+
+var admin = require("firebase-admin");
+
+const serviceAccount = require("../../service_account.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+admin.firestore().settings({ ignoreUndefinedProperties: true });
+
+
 require("dotenv").config({ path: `${__dirname}/../../.env` });
 
 var messagebird = require("messagebird")(process.env.MESSAGEBIRDKEY);
@@ -13,7 +25,7 @@ var params = {
 
 exports.register = async (req, res, next) => {
   try {
-    const newWorker = new userModel({
+    const newWorker = {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       bio: req.body.bio,
@@ -21,9 +33,10 @@ exports.register = async (req, res, next) => {
       email: req.body.email,
       password: req.body.password,
       profilePhoto: req.body.profilePhoto,
-    });
+    };
 
-    let added = await userModel.create(newWorker);
+    let added  = await userModel.create(newWorker);
+			
     const token = jwt.sign(added.email, process.env.secret_key);
     res
       .status(200)
@@ -37,6 +50,78 @@ exports.register = async (req, res, next) => {
       .json({ status: 400, message: "email/phone number already exists" });
   }
 };
+
+
+exports.registerv1 = async (req, res, next) => {
+  try {
+    let newWorker = {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      userName: req.body.userName,
+      email: req.body.email,
+      password: req.body.password,
+    };
+
+    let added = await userModel.create(newWorker);
+ //   const token = jwt.sign(added.email, process.env.secret_key);
+    
+    
+    admin.auth()
+	      .createCustomToken(added._id.toString())
+	      .then((customToken) => {
+	        // Send token back to client
+			const token = jwt.sign(added.email, process.env.secret_key);
+	        res.status(200).json({authtoken: customToken,success:true, data:added,accessToken: token});
+	
+	      })
+	      .catch((error) => {
+	        console.log('Error creating custom token:', error);
+	        res.status(400).json(null);
+	      });
+
+  } catch (error) {
+    console.log(error);
+    res
+      .status(422)
+      .setHeader("Content-Type", "application/json")
+      .json({success:false, info:{message: "email already exists"} });
+  }
+};
+
+
+exports.authenticate = (req, res, next) => {
+	  /* custom callback . gives us access to req res and next coz of js closure */
+  passport.authenticate("login", (err, user, info) => {
+    if (err || !user) {
+      res.statusCode = 400;
+      res.setHeader("Content-Type", "application/json");
+      res.json({success:false,info});
+    }
+    req.login(user, { session: false }, (error) => {
+      if (error) {
+        return res
+          .status(422)
+          .setHeader("Content-Type", "application/json")
+          .json(error.message);
+      } else if (user && !error) {
+
+	      admin.auth()
+	      .createCustomToken(info._id.toString())
+	      .then((customToken) => {
+	        // Send token back to client
+	        const token = jwt.sign(info.email, process.env.secret_key);
+	        res.status(200).json({authtoken: customToken,success:true, data:info,accessToken: token});
+	
+	      })
+	      .catch((error) => {
+	        console.log('Error creating custom token:', error);
+	        res.status(400).json(null);
+	      });
+
+      }
+    });
+  })(req, res, next);  
+}
 
 exports.userLogin = (req, res, next) => {
   /* custom callback . gives us access to req res and next coz of js closure */
@@ -72,6 +157,8 @@ exports.userLogin = (req, res, next) => {
     });
   })(req, res, next);
 };
+
+
 
 exports.phoneLogin = (req, res, next) => {
   /* custom callback . gives us access to req res and next coz of js closure */

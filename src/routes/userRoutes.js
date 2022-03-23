@@ -41,6 +41,20 @@ userRouter
 	);
 
 userRouter
+	.route("/followers/:userId")
+	.get(
+		passport.authenticate("jwt", { session: false }),
+		userController.userFollowers
+	)
+
+userRouter
+	.route("/following/:userId")
+	.get(
+		passport.authenticate("jwt", { session: false }),
+		userController.userFollowing
+	)
+
+userRouter
 	.route("/search/:name")
 	.get(
 		passport.authenticate("jwt", { session: false }),

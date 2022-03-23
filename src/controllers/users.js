@@ -57,6 +57,31 @@ exports.getUserById = (req, res, next) => {
 		});
 };
 
+exports.userFollowers = async function (req, res) {
+	try {
+  
+	const users = await userModel.find({
+		following: req.params.userId})
+  
+	  res.json(users);
+	} catch (error) {
+		console.log(error + " ")
+	  res.status(404).send(error);
+	}
+  };
+
+  exports.userFollowing = async function (req, res) {
+	try {
+  
+	const users = await userModel.find({
+		followers: req.params.userId})
+  
+	  res.json(users);
+	} catch (error) {
+		console.log(error + " ")
+	  res.status(404).send(error);
+	}
+  };
 
 exports.searchForUser = async function (req, res) {
 	try {

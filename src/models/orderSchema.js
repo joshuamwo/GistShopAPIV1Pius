@@ -19,6 +19,20 @@ const orderSchema = new Schema(
       type: Schema.Types.ObjectId,
       required: true,
     },
+    productId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
+    quantity: {
+      type: Number,
+      required: true,
+      default: 1
+    },
+    date: {
+      type: Number,
+      default: Date.now(),
+      required: true
+    },
     itemId: {
       type: Schema.Types.ObjectId,
       required: true,
