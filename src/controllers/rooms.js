@@ -21,37 +21,37 @@ exports.createRoom = async (req, res) => {
     productPrice: req.body.productPrice
   };
   try {
-    let rooms = await roomsModel.find({ ownerId: req.params.userId }); 
-    
+    let rooms = await roomsModel.find({ ownerId: req.params.userId });
+
 
     let user = await userModel.findById(req.params.userId)
 
-    if(user.currentRoom != "" && user.currentRoom != req.params.roomId){
+    if (user.currentRoom != "" && user.currentRoom != req.params.roomId) {
       let userRoom = await roomsModel.findById(user.currentRoom)
 
-      if(userRoom != null){
-        if(userRoom.hostIds.length < 2 && userRoom.hostIds.includes(req.params.userId)){
-	     
+      if (userRoom != null) {
+        if (userRoom.hostIds.length < 2 && userRoom.hostIds.includes(req.params.userId)) {
+
           await roomsModel.findByIdAndDelete(user.currentRoom)
-        }else{
+        } else {
           await roomsModel.findByIdAndUpdate(
             user.currentRoom,
             {
-              $pullAll: {speakerIds: [req.params.userId]},
+              $pullAll: { speakerIds: [req.params.userId] },
             },
             { runValidators: true, new: true, upsert: false }
           );
           await roomsModel.findByIdAndUpdate(
             user.currentRoom,
             {
-              $pullAll: {hostIds: [req.params.userId]},
+              $pullAll: { hostIds: [req.params.userId] },
             },
             { runValidators: true, new: true, upsert: false }
           );
           await roomsModel.findByIdAndUpdate(
             user.currentRoom,
             {
-              $pullAll: {userIds: [req.params.userId]},
+              $pullAll: { userIds: [req.params.userId] },
             },
             { runValidators: true, new: true, upsert: false }
           );
@@ -61,14 +61,15 @@ exports.createRoom = async (req, res) => {
 
     let newRoom = await roomsModel.create(newObj)
 
-        
-    await userModel.findByIdAndUpdate(req.params.userId,
-			{
-				$set: {currentRoom: newRoom._id}
-			}
-		)
 
-    for( let i = 0; i < user.followers.length; i ++) {
+    await userModel.findByIdAndUpdate(req.params.userId,
+      {
+        $set: { currentRoom: newRoom._id }
+      }
+    )
+
+
+    for (let i = 0; i < user.followers.length; i++) {
 
       functions.saveActivity(
         newRoom._id,
@@ -82,7 +83,24 @@ exports.createRoom = async (req, res) => {
       )
 
     }
-    
+
+    var userNotificationTokens = []
+
+    for (let i = 0; i < user.followers.length; i++) {
+      var follower = await userModel.find({ _id: user.followers[i] })
+
+      if (follower.notificationToken != "") {
+        userNotificationTokens.push(follower.notificationToken)
+      }
+
+    }
+
+    console.log("Number of nots to be sent " + userNotificationTokens.length)
+
+    if (userNotificationTokens.length > 0) {
+      functions.sendNotificationOneSignal(userNotificationTokens, req.body.title, req.body.message, req.body.screen, req.body.id)
+    }
+
     res.status(200).setHeader("Content-Type", "application/json").json(newRoom);
   } catch (error) {
     res
@@ -150,11 +168,11 @@ exports.getRoomsByUserId = async (req, res) => {
 };
 exports.getRoomsAllRooms = async (req, res) => {
   try {
-	   
-	  
-    let rooms = await roomsModel.find()    
-    .sort({createdAt: -1})  
-       .populate("hostIds", [
+
+
+    let rooms = await roomsModel.find()
+      .sort({ createdAt: -1 })
+      .populate("hostIds", [
         "firstName",
         "lastName",
         "bio",
@@ -258,24 +276,24 @@ exports.addUserToRoom = async (req, res) => {
 
     let user = await userModel.findById(req.body.users[0])
 
-    if(user.currentRoom != "" && user.currentRoom != req.params.roomId){
+    if (user.currentRoom != "" && user.currentRoom != req.params.roomId) {
       console.log("User has room")
       let userRoom = await roomsModel.findById(user.currentRoom)
 
-      if(userRoom != null){
+      if (userRoom != null) {
         console.log("room is not null")
-        if(userRoom.hostIds.length < 2 && userRoom.hostIds.includes(req.body.users[0])){
-	     
+        if (userRoom.hostIds.length < 2 && userRoom.hostIds.includes(req.body.users[0])) {
+
           console.log("User is a host and it has other hosts")
           await roomsModel.findByIdAndDelete(user.currentRoom)
-        }else{
+        } else {
           console.log("Opposite of User is a host and it has other hosts")
           await roomsModel.findByIdAndUpdate(
             user.currentRoom,
             {
-              $pullAll: {userIds: [req.body.users]},
-              $pullAll: {hostIds: [req.body.users]},
-              $pullAll: {speakerIds: [req.body.users]},
+              $pullAll: { userIds: [req.body.users] },
+              $pullAll: { hostIds: [req.body.users] },
+              $pullAll: { speakerIds: [req.body.users] },
             },
             { runValidators: true, new: true, upsert: false }
           );
@@ -284,26 +302,26 @@ exports.addUserToRoom = async (req, res) => {
     }
 
     await userModel.findByIdAndUpdate(req.body.users[0],
-			{
-				$set: {currentRoom: req.params.roomId}
-			}
-		)
+      {
+        $set: { currentRoom: req.params.roomId }
+      }
+    )
 
-    if (room.hostIds.includes(req.body.users[0]) || room.speakerIds.includes(req.body.users[0])){
+    if (room.hostIds.includes(req.body.users[0]) || room.speakerIds.includes(req.body.users[0])) {
 
       res
         .status(200)
         .setHeader("Content-Type", "application/json")
         .json(room);
-      
 
-    }else{
-	    
-	    let updatedRoom = await roomsModel.findByIdAndUpdate(
+
+    } else {
+
+      let updatedRoom = await roomsModel.findByIdAndUpdate(
         req.params.roomId,
         {
-          $addToSet: {userIds: req.body.users},
-          
+          $addToSet: { userIds: req.body.users },
+
         },
         { runValidators: true, new: true, upsert: false }
       );
@@ -311,7 +329,7 @@ exports.addUserToRoom = async (req, res) => {
         .status(200)
         .setHeader("Content-Type", "application/json")
         .json(updatedRoom);
-      
+
     }
 
   } catch (error) {
@@ -325,21 +343,21 @@ exports.addUserToRoom = async (req, res) => {
 exports.removeUserFromRoom = async (req, res) => {
 
   try {
-  
+
     let updatedRoom = await roomsModel.findByIdAndUpdate(
       req.params.roomId,
       {
-        $pullAll: {userIds: [req.body.users]},
-        
+        $pullAll: { userIds: [req.body.users] },
+
       },
       { runValidators: true, new: true, upsert: false }
     );
 
     await userModel.findByIdAndUpdate(req.body.users[0],
-			{
-				$set: {currentRoom: ""}
-			}
-		)
+      {
+        $set: { currentRoom: "" }
+      }
+    )
 
     res
       .status(200)
@@ -356,21 +374,21 @@ exports.removeUserFromRoom = async (req, res) => {
 exports.removeUserFromAudienceRoom = async (req, res) => {
 
   try {
-  
+
     let updatedRoom = await roomsModel.findByIdAndUpdate(
       req.params.roomId,
       {
-        $pullAll: {userIds: [req.body.users]},
-        
+        $pullAll: { userIds: [req.body.users] },
+
       },
       { runValidators: true, new: true, upsert: false }
     );
 
     await userModel.findByIdAndUpdate(req.body.users[0],
-			{
-				$set: {currentRoom: ""}
-			}
-		)
+      {
+        $set: { currentRoom: "" }
+      }
+    )
 
     res
       .status(200)
@@ -387,12 +405,12 @@ exports.removeUserFromAudienceRoom = async (req, res) => {
 exports.removeSpeakerRoom = async (req, res) => {
 
   try {
-  
+
     let updatedRoom = await roomsModel.findByIdAndUpdate(
       req.params.roomId,
       {
-        $pullAll: {speakerIds: [req.body.speakerIds]},
-        
+        $pullAll: { speakerIds: [req.body.speakerIds] },
+
       },
       { runValidators: true, new: true, upsert: false }
     );
@@ -414,12 +432,12 @@ exports.removeSpeakerRoom = async (req, res) => {
 exports.removeRaisedHandRoom = async (req, res) => {
 
   try {
-  
+
     let updatedRoom = await roomsModel.findByIdAndUpdate(
       req.params.roomId,
       {
-        $pullAll: {raisedHands: [req.body.users]},
-        
+        $pullAll: { raisedHands: [req.body.users] },
+
       },
       { runValidators: true, new: true, upsert: false }
     );
@@ -482,7 +500,16 @@ exports.getRoomById = async (req, res) => {
         "email",
         "profilePhoto"
       ])
-      .populate("productIds")
+      .populate({
+        path: "productIds",
+        populate: ({
+          path: "shopId ownerId",
+          select: ["description", "image"],
+          model: "shop",
+        }),
+      
+      })
+
       .populate("shopId", ["description", "image"])
       .populate("ownerId", [
         "firstName",

@@ -13,10 +13,10 @@ const userSchema = new Schema(
   {
     firstName: value,
     lastName: value,
-    bio: {type: String,default: ""},
+    bio: { type: String, default: "" },
     userName: value,
-    phonenumber: {type: String,},
-    profilePhoto: {type: String,default: ""},
+    phonenumber: { type: String, },
+    profilePhoto: { type: String, default: "" },
     email: {
       type: String,
       trim: true,
@@ -30,24 +30,30 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      
+
+    },
+    followersCount: {
+      type: Number
+    },
+    followingCount: {
+      type: Number
     },
     followers: [
       {
         type: Schema.Types.ObjectId,
-			  ref: "user",
+        ref: "user",
       }
     ],
     following: [
       {
         type: Schema.Types.ObjectId,
-			  ref: "user",
+        ref: "user",
       }
     ],
-    memberShip:{
+    memberShip: {
       type: Number
     },
-    upgradedDate:{
+    upgradedDate: {
       type: Number
     },
     wallet: {
@@ -76,10 +82,14 @@ const userSchema = new Schema(
       default: "",
     },
     shopId: {
-        type: Schema.Types.ObjectId,
-		ref: "shop",
-        default: null,
-    }
+      type: Schema.Types.ObjectId,
+      ref: "shop",
+      default: null,
+    },
+    notificationToken: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,
@@ -94,11 +104,11 @@ userSchema.pre("save", async function (next) {
   const user = this;
   const hash = await bcrypt.hash(this.password, 10);
   this.password = hash;
-  if(this.profilePhoto){
-	  decode(this.profilePhoto, this._id);
-	  const image = `${user._id}.png`;
-	
-	  this.profilePhoto = image;
+  if (this.profilePhoto) {
+    decode(this.profilePhoto, this._id);
+    const image = `${user._id}.png`;
+
+    this.profilePhoto = image;
 
   }
   next();
@@ -127,7 +137,7 @@ userSchema.pre("findOneAndUpdate", async function (next) {
   this._update.$set.profilePhoto = image;
 
   }
-	next();
+  next();
 });
 */
 

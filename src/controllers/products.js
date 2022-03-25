@@ -5,7 +5,7 @@ exports.getAllProducts = async (req, res) => {
 	try {
 		let products = await productModel
 			.find()
-			.populate("shopId", ["image"])
+			.populate("shopId", ["image", "open"])
 			.populate("ownerId", ["userName"]);
 		res
 			.status(200)
@@ -23,15 +23,8 @@ exports.getAllProductsByShopId = async (req, res) => {
 	try {
 		let products = await productModel
 			.find({ shopId: req.params.shopId })
-			.populate("shopId", [
-				"_id",
-				"name",
-				"email",
-				"location",
-				"phoneNumber",
-				"description",
-				"image",
-			])
+			.populate("shopId", ["image", "open"])
+			.populate("ownerId", ["userName"]);
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")
@@ -46,7 +39,9 @@ exports.getAllProductsByShopId = async (req, res) => {
 
 exports.getAllProductsByUserId = async (req, res) => {
 	try {
-		let products = await productModel.find({ ownerId: req.params.userId });
+		let products = await productModel.find({ ownerId: req.params.userId })
+			.populate("shopId", ["image", "open"])
+			.populate("ownerId", ["userName"]);
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")
@@ -67,12 +62,13 @@ exports.addProductToShop = async (req, res) => {
 		images: req.body.images,
 		shopId: mongoose.mongo.ObjectId(req.params.shopId),
 		ownerId: req.body.ownerId,
-		description: req.body.description
+		description: req.body.description,
+		variations: req.body.variations.split(",")
 	};
 
 	try {
 		let newProd = await productModel.create(newProduct);
-		res.status(200).setHeader("Content-Type", "application/json").json(newProd);
+		res.status(200).setHeader("Content-Type", "application/json").json({ "success": true, data: newProd });
 	} catch (error) {
 		res
 			.status(422)
@@ -83,9 +79,9 @@ exports.addProductToShop = async (req, res) => {
 
 exports.getProductById = async (req, res) => {
 	try {
-		let product = await productModel
-			.findById(req.params.productId)
-			.populate("ownerId", ["userName"]);
+		let product = await productModel.findById(req.params.productId)
+			.populate("shopId", ["image", "open"])
+			.populate("ownerId", ["userName"])
 		res.status(200).setHeader("Content-Type", "application/json").json(product);
 	} catch (error) {
 		res
@@ -96,16 +92,19 @@ exports.getProductById = async (req, res) => {
 };
 
 exports.updateProductById = async (req, res) => {
+	if (req.body.variations) {
+		req.body.variations = req.body.variations.split(",");
+	}
 	let newObj = req.body;
 	try {
 		let newProduct = await productModel.findByIdAndUpdate(
 			req.params.productId,
-			{$set: newObj}
+			{ $set: newObj }
 		);
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")
-			.json(newProduct);
+			.json({ "success": true, data: newProduct });
 	} catch (error) {
 		console.log(error)
 		res
@@ -117,11 +116,12 @@ exports.updateProductById = async (req, res) => {
 
 exports.updateProductImages = async (req, res) => {
 	let newObj = {
-		images: req.body.images};
+		images: req.body.images
+	};
 	try {
 		let newProduct = await productModel.findByIdAndUpdate(
 			req.params.productId,
-			{$push : newObj},
+			{ $addToSet: req.body.images },
 			{ runValidators: true, new: true }
 		);
 		res

@@ -9,6 +9,7 @@ const addressRouter = require("./address");
 const roomRouter = require("./roomRoutes");
 const transRouter = require("./transactions");
 const activityRouter = require("./activitiesRoute")
+const notificationsRouter = require("./notificationRoutes")
 
 const passport = require("passport");
 
@@ -26,3 +27,4 @@ app.use("/billing", passport.authenticate("jwt", { session: false }), billingRou
 app.use("/rooms", passport.authenticate("jwt", { session: false }), roomRouter);
 app.use("/transactions", passport.authenticate("jwt", { session: false }), transRouter);
 app.use("/activity", activityRouter);
+app.use("/notifications", passport.authenticate("jwt", { session: false }), notificationsRouter);

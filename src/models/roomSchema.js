@@ -80,6 +80,7 @@ const roomSchema = new Schema(
 );
 
 
+/*
 roomSchema.pre("save", function (next) {
 
   var now = Date.now();
@@ -109,6 +110,7 @@ roomSchema.pre("findOneAndUpdate", function (next) {
 
 	next();
 });
+*/
 
 const roomModel = model("rooms", roomSchema);
 module.exports = roomModel;
