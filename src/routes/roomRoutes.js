@@ -28,6 +28,13 @@ roomRouter
 		upload.any("productImages"),
 		roomController.updateRoomById)
 	.delete(roomController.deleteRoomById);
+	
+roomRouter
+	.route("/search/:name")
+	.get(
+		roomController.searchForRoom
+	)
+	
 
 roomRouter.route("/get/all/:userId").get(roomController.getRoomsByUserId);
 
@@ -38,6 +45,8 @@ roomRouter.route("/user/add/:roomId").put(roomController.addUserToRoom);
 roomRouter.route("/user/remove/:roomId").put(roomController.removeUserFromRoom);
 
 roomRouter.route("/speaker/remove/:roomId").put(roomController.removeSpeakerRoom);
+
+roomRouter.route("/host/remove/:roomId").put(roomController.removeHostRoom);
 
 roomRouter.route("/audience/remove/:roomId").put(roomController.removeUserFromAudienceRoom);
 

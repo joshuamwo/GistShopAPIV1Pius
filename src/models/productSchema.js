@@ -19,11 +19,18 @@ const productSchema = new Schema(
 			min: 0,
 			required: true,
 		},
+		available: {
+			type: Boolean,
+			default: true,
+		},
 		images: 
 			{
 				type: Array,
 			},
-		
+		variations: 
+			{
+				type: Array,
+			},
 		description: 
 			{
 				type: String,
@@ -42,6 +49,7 @@ const productSchema = new Schema(
 	{ timestamps: true, autoIndex: true, autoCreate: true }
 );
 
+/*
 productSchema.pre("save", function (next) {
 
 	var now = Date.now()
@@ -55,7 +63,11 @@ productSchema.pre("save", function (next) {
 	this.images = images;
 	next();
 });
+*/
 
+
+
+/*
 productSchema.pre("findOneAndUpdate", function (next) {
 	const product = this;
 	var now = Date.now()
@@ -81,6 +93,7 @@ productSchema.pre("findOneAndUpdate", function (next) {
 
 	next();
 });
+*/
 
 const products = model("product", productSchema);
 

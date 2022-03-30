@@ -166,6 +166,71 @@ exports.getRoomsByUserId = async (req, res) => {
       .json(error.message);
   }
 };
+
+exports.searchForRoom = async function (req, res) {
+	try {
+  
+	const rooms = await roomsModel.find({
+	title: { $regex: req.params.name, $options: "i" }}).sort({ createdAt: -1 })
+      .populate("hostIds", [
+        "firstName",
+        "lastName",
+        "bio",
+        "userName",
+        "email",
+        "profilePhoto"
+      ])
+      .populate("userIds", [
+        "firstName",
+        "lastName",
+        "bio",
+        "userName",
+        "email",
+        "profilePhoto"
+      ])
+      .populate("raisedHands", [
+        "firstName",
+        "lastName",
+        "bio",
+        "userName",
+        "email",
+        "profilePhoto"
+      ])
+      .populate("speakerIds", [
+        "firstName",
+        "lastName",
+        "bio",
+        "userName",
+        "email",
+        "profilePhoto"
+      ])
+      .populate("invitedIds", [
+        "firstName",
+        "lastName",
+        "bio",
+        "userName",
+        "email",
+        "profilePhoto"
+      ])
+      .populate("productIds", ["images", "name", "price", "quantity"])
+      .populate("shopId", ["description", "image"])
+      .populate("ownerId", [
+        "firstName",
+        "lastName",
+        "bio",
+        "userName",
+        "email",
+        "profilePhoto"
+      ]);
+  
+	  res.json(rooms);
+	} catch (error) {
+	  res.status(404).send(error);
+	}
+  };
+  
+  
+  
 exports.getRoomsAllRooms = async (req, res) => {
   try {
 
@@ -347,7 +412,7 @@ exports.removeUserFromRoom = async (req, res) => {
     let updatedRoom = await roomsModel.findByIdAndUpdate(
       req.params.roomId,
       {
-        $pullAll: { userIds: [req.body.users] },
+        $pullAll: { userIds: req.body.users },
 
       },
       { runValidators: true, new: true, upsert: false }
@@ -378,7 +443,7 @@ exports.removeUserFromAudienceRoom = async (req, res) => {
     let updatedRoom = await roomsModel.findByIdAndUpdate(
       req.params.roomId,
       {
-        $pullAll: { userIds: [req.body.users] },
+        $pullAll: { userIds: req.body.users },
 
       },
       { runValidators: true, new: true, upsert: false }
@@ -409,7 +474,33 @@ exports.removeSpeakerRoom = async (req, res) => {
     let updatedRoom = await roomsModel.findByIdAndUpdate(
       req.params.roomId,
       {
-        $pullAll: { speakerIds: [req.body.speakerIds] },
+        $pullAll: { speakerIds: req.body.users },
+
+      },
+      { runValidators: true, new: true, upsert: false }
+    );
+
+
+    res
+      .status(200)
+      .setHeader("Content-Type", "application/json")
+      .json(updatedRoom);
+  } catch (error) {
+    res
+      .status(422)
+      .setHeader("Content-Type", "application/json")
+      .json(error.message);
+  }
+};
+
+exports.removeHostRoom = async (req, res) => {
+
+  try {
+
+    let updatedRoom = await roomsModel.findByIdAndUpdate(
+      req.params.roomId,
+      {
+        $pullAll: { hostIds: req.body.users },
 
       },
       { runValidators: true, new: true, upsert: false }
@@ -436,7 +527,7 @@ exports.removeRaisedHandRoom = async (req, res) => {
     let updatedRoom = await roomsModel.findByIdAndUpdate(
       req.params.roomId,
       {
-        $pullAll: { raisedHands: [req.body.users] },
+        $pullAll: { raisedHands: req.body.users },
 
       },
       { runValidators: true, new: true, upsert: false }
@@ -503,13 +594,12 @@ exports.getRoomById = async (req, res) => {
       .populate({
         path: "productIds",
         populate: ({
-          path: "shopId ownerId",
+          path: "ownerId shopId",
           select: ["description", "image"],
-          model: "shop",
+          model: "user",
         }),
       
       })
-
       .populate("shopId", ["description", "image"])
       .populate("ownerId", [
         "firstName",

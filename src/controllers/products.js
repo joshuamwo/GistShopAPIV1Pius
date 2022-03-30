@@ -4,7 +4,7 @@ var productModel = require("../models/productSchema");
 exports.getAllProducts = async (req, res) => {
 	try {
 		let products = await productModel
-			.find()
+			.find({available: {$ne: false}})
 			.populate("shopId", ["image", "open"])
 			.populate("ownerId", ["userName"]);
 		res
@@ -22,7 +22,10 @@ exports.getAllProducts = async (req, res) => {
 exports.getAllProductsByShopId = async (req, res) => {
 	try {
 		let products = await productModel
-			.find({ shopId: req.params.shopId })
+			.find({ $and: [
+				{shopId: req.params.shopId },
+				{available: {$ne: false}}
+			]})
 			.populate("shopId", ["image", "open"])
 			.populate("ownerId", ["userName"]);
 		res
@@ -39,7 +42,11 @@ exports.getAllProductsByShopId = async (req, res) => {
 
 exports.getAllProductsByUserId = async (req, res) => {
 	try {
-		let products = await productModel.find({ ownerId: req.params.userId })
+		let products = await productModel.find({ 
+			$and: [
+				{ownerId: req.params.userId},
+				{available: {$ne: false}}
+			] })
 			.populate("shopId", ["image", "open"])
 			.populate("ownerId", ["userName"]);
 		res
@@ -53,6 +60,15 @@ exports.getAllProductsByUserId = async (req, res) => {
 			.json(error.message);
 	}
 };
+
+exports.productQtyCheck = async (req, res) => {
+	let product = await productModel.findById(req.body.productId)
+	if(product.quantity < req.body.quantity){ 
+		return res.send({"status":false, "qty":product.quantity}); 
+	}
+	return res.send({"status":true, "qty":product.quantity}); 
+}
+
 
 exports.addProductToShop = async (req, res) => {
 	const newProduct = {
@@ -68,6 +84,9 @@ exports.addProductToShop = async (req, res) => {
 
 	try {
 		let newProd = await productModel.create(newProduct);
+		newProd.shopId = null;
+		newProd.ownerId = null;
+
 		res.status(200).setHeader("Content-Type", "application/json").json({ "success": true, data: newProd });
 	} catch (error) {
 		res
@@ -77,6 +96,27 @@ exports.addProductToShop = async (req, res) => {
 	}
 };
 
+exports.searchForProduct = async function (req, res) {
+	try {
+  
+	const products = await productModel.find({
+	name: { $regex: req.params.name, $options: "i" }})
+	.populate("shopId", [
+					'name','email','location','phoneNumber','image','description','open','ownerId'
+				]).populate("ownerId", [
+		"firstName",
+		"lastName",
+		"bio",
+		"userName",
+		"email",
+	]).limit(20)
+  
+	  res.json(products);
+	} catch (error) {
+	  res.status(404).send(error);
+	}
+  };
+  
 exports.getProductById = async (req, res) => {
 	try {
 		let product = await productModel.findById(req.params.productId)
@@ -101,6 +141,9 @@ exports.updateProductById = async (req, res) => {
 			req.params.productId,
 			{ $set: newObj }
 		);
+
+		newProduct.shopId = null;
+		newProduct.ownerId = null;
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")
@@ -121,9 +164,13 @@ exports.updateProductImages = async (req, res) => {
 	try {
 		let newProduct = await productModel.findByIdAndUpdate(
 			req.params.productId,
-			{ $addToSet: req.body.images },
+			{ $addToSet: newObj},
 			{ runValidators: true, new: true }
 		);
+
+		newProduct.shopId = null;
+		newProduct.ownerId = null;
+		
 		res
 			.status(200)
 			.setHeader("Content-Type", "application/json")
@@ -138,7 +185,7 @@ exports.updateProductImages = async (req, res) => {
 
 exports.deleteProductById = async (req, res) => {
 	try {
-		let deleted = await productModel.findByIdAndDelete(req.params.productId);
+		let deleted = await productModel.findOneAndRemove({_id: req.params.productId});
 		res.status(200).setHeader("Content-Type", "application/json").json(deleted);
 	} catch (error) {
 		res

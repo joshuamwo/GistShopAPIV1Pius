@@ -12,6 +12,9 @@ exports.getAllUsers = (req, res, next) => {
 	
 	userModel
 		.find({})
+		.populate("shopId", [
+			'name','email','location','phoneNumber','image','description','open','ownerId'
+		])
 		.sort("-_id")
 		.limit(20)
 		.then(
@@ -37,8 +40,10 @@ exports.getUserById = (req, res, next) => {
 
 				user.followersCount = user.followers.length
 				user.followingCount = user.following.length
+/*
 				user.followers = []
 				user.following = []
+*/
 
 				res.statusCode = 200;
 				res.setHeader("Content-Type", "application/json");

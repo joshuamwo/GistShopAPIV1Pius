@@ -4,6 +4,7 @@ const itemModel = require("../models/itemSchema");
 const userModel = require("../models/userSchema");
 const transactionModel = require("../models/transactionSchema");
 const shopModel = require("../models/shopSchema");
+var productModel = require("../models/productSchema");
 
 const utils = require("../../utils");
 const functions = require("../shared/functions")
@@ -70,6 +71,8 @@ exports.getOrderByShopId = async (req, res) => {
 	}
 };
 
+
+
 exports.addOrder = async (req, res) => {
 	let newOrder;
 	let newItem;
@@ -79,6 +82,8 @@ exports.addOrder = async (req, res) => {
 			req.body.order.map(async (item) => {
 				let orderId = new mongoose.Types.ObjectId();
 				let itemId = new mongoose.Types.ObjectId();
+				
+				
 
 				let productShop = await shopModel.findById(item.shopId)
 
@@ -114,6 +119,19 @@ exports.addOrder = async (req, res) => {
 					quantity: item.quantity,
 					orderId,
 				});
+				{
+					/*......................................
+				*reduce product qty
+			......................................*/
+				}
+				
+				await productModel.findByIdAndUpdate(
+					item.productId,
+					{ $inc: { quantity: parseInt(item.quantity) * -1 } },
+					{ runValidators: true, new: true }
+				);
+		
+				
 				{
 					/*......................................
 				*save transaction to the customer
@@ -205,8 +223,8 @@ exports.addOrder = async (req, res) => {
 					.setHeader("Content-Type", "application/json")
 					.json({ newOrder, newItem });
 			})
-			.catch((e) => {
-				console.log(e + " ")
+			.catch((e, s) => {
+				console.log(e + " " + s)
 				res
 					.status(422)
 					.setHeader("Content-Type", "application/json")
